@@ -36,7 +36,9 @@ var DatabaseMethods;
     var User = /** @class */ (function (_super) {
         __extends(User, _super);
         function User() {
-            var _this = _super.call(this) || this;
+            return _super.call(this) || this;
+        }
+        User.prototype.make = function () {
             var schema = new mongoose_1.Schema({
                 userID: { type: String, required: true },
                 username: { type: String, required: true },
@@ -44,9 +46,9 @@ var DatabaseMethods;
             }, {
                 timestamps: true
             });
-            _this._model = mongoose_1.model("users", schema);
-            return _this;
-        }
+            this._model = mongoose_1.model("users", schema);
+            return this;
+        };
         Object.defineProperty(User.prototype, "model", {
             get: function () {
                 return this._model.create({
@@ -64,7 +66,9 @@ var DatabaseMethods;
     var Post = /** @class */ (function (_super) {
         __extends(Post, _super);
         function Post() {
-            var _this = _super.call(this) || this;
+            return _super.call(this) || this;
+        }
+        Post.prototype.make = function () {
             var schema = new mongoose_1.Schema({
                 postID: { type: String, required: true },
                 user: { type: String, required: true },
@@ -75,9 +79,9 @@ var DatabaseMethods;
             }, {
                 timestamps: true
             });
-            _this._model = mongoose_1.model("posts", schema);
-            return _this;
-        }
+            this._model = mongoose_1.model("posts", schema);
+            return this;
+        };
         Object.defineProperty(Post.prototype, "model", {
             get: function () {
                 return this._model.create({
@@ -97,7 +101,9 @@ var DatabaseMethods;
     var Restaurant = /** @class */ (function (_super) {
         __extends(Restaurant, _super);
         function Restaurant() {
-            var _this = _super.call(this) || this;
+            return _super.call(this) || this;
+        }
+        Restaurant.prototype.make = function () {
             var schema = new mongoose_1.Schema({
                 restaurantID: { type: String, required: true },
                 name: { type: String, required: true },
@@ -111,9 +117,9 @@ var DatabaseMethods;
             }, {
                 timestamps: true
             });
-            _this._model = mongoose_1.model("restaurants", schema);
-            return _this;
-        }
+            this._model = mongoose_1.model("restaurants", schema);
+            return this;
+        };
         Object.defineProperty(Restaurant.prototype, "model", {
             get: function () {
                 return this._model.create({
@@ -137,16 +143,18 @@ var DatabaseMethods;
     var PostType = /** @class */ (function (_super) {
         __extends(PostType, _super);
         function PostType() {
-            var _this = _super.call(this) || this;
+            return _super.call(this) || this;
+        }
+        PostType.prototype.make = function () {
             var schema = new mongoose_1.Schema({
                 postTypeID: { type: Number, required: true },
                 typeDescription: { type: String, required: true }
             }, {
                 timestamps: true
             });
-            _this._model = mongoose_1.model("postTypes", schema);
-            return _this;
-        }
+            this._model = mongoose_1.model("postTypes", schema);
+            return this;
+        };
         Object.defineProperty(PostType.prototype, "model", {
             get: function () {
                 return this._model.create({
@@ -163,16 +171,18 @@ var DatabaseMethods;
     var RestaurantRatings = /** @class */ (function (_super) {
         __extends(RestaurantRatings, _super);
         function RestaurantRatings() {
-            var _this = _super.call(this) || this;
+            return _super.call(this) || this;
+        }
+        RestaurantRatings.prototype.make = function () {
             var schema = new mongoose_1.Schema({
                 restaurantRatingID: { type: String, required: true },
                 rating: { type: Number, required: true }
             }, {
                 timestamps: true
             });
-            _this._model = mongoose_1.model("ratings", schema);
-            return _this;
-        }
+            this._model = mongoose_1.model("ratings", schema);
+            return this;
+        };
         Object.defineProperty(RestaurantRatings.prototype, "model", {
             get: function () {
                 return this._model.create({

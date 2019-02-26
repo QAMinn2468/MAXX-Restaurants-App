@@ -45,14 +45,18 @@ export namespace DatabaseMethods {
 
         constructor() {
             super();
+        }
+
+        make() {
             const schema = new Schema({
                 userID: { type: String, required: true },
                 username: { type: String, required: true },
-                password: { type: String, required: true},
+                password: { type: String, required: true },
             }, {
-                timestamps: true
-            });
+                    timestamps: true
+                });
             this._model = model("users", schema);
+            return this;
         }
 
         get model() {
@@ -97,6 +101,9 @@ export namespace DatabaseMethods {
 
         constructor() {
             super();
+        }
+
+        make() {
             const schema = new Schema({
                 postID: { type: String, required: true },
                 user: { type: String, required: true },
@@ -108,6 +115,7 @@ export namespace DatabaseMethods {
                 timestamps: true
             });
             this._model = model("posts", schema);
+            return this;
         }
 
         get model() {
@@ -139,8 +147,11 @@ export namespace DatabaseMethods {
 
         constructor() {
             super();
+        }
+
+        make() {
             const schema = new Schema({
-                restaurantID: { type: String, required: true},
+                restaurantID: { type: String, required: true },
                 name: { type: String, required: true },
                 description: { type: String, default: "" },
                 street: { type: String, required: true },
@@ -150,9 +161,10 @@ export namespace DatabaseMethods {
                 country: { type: String, required: true },
                 zip: { type: String, required: true },
             }, {
-                timestamps: true
-            });
+                    timestamps: true
+                });
             this._model = model("restaurants", schema);
+            return this;
         }
 
         get model() {
@@ -181,13 +193,17 @@ export namespace DatabaseMethods {
 
         constructor() {
             super();
+        }
+
+        make() {
             const schema = new Schema({
                 postTypeID: { type: Number, required: true },
                 typeDescription: { type: String, required: true }
             }, {
-                timestamps: true
-            });
+                    timestamps: true
+                });
             this._model = model("postTypes", schema);
+            return this;
         }
 
         get model() {
@@ -213,13 +229,17 @@ export namespace DatabaseMethods {
 
         constructor() {
             super();
+        }
+
+        make() {
             const schema = new Schema({
                 restaurantRatingID: { type: String, required: true },
                 rating: { type: Number, required: true }
             }, {
-                timestamps: true
-            });
+                    timestamps: true
+                });
             this._model = model("ratings", schema);
+            return this;
         }
 
         get model() {
