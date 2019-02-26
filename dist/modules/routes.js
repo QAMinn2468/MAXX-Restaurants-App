@@ -15,9 +15,31 @@ var Routes = /** @class */ (function () {
         configurable: true
     });
     Routes.prototype.createRoutes = function () {
-        this.app.get("/", function (req, res) {
-            res.send("ESKETIT");
-        });
+        this.app.get("/", this.index);
+        this.app.get("/restaurants", this.restaurants);
+        this.app.get("/restaurants/:id", this.restaurant);
+        this.app.get("/reviews", this.reviews);
+        this.app.get("/reviews/:id", this.review);
+    };
+    Routes.prototype.index = function (req, res, next) {
+        if (next === void 0) { next = null; }
+        res.send("ESKETIT");
+    };
+    Routes.prototype.restaurants = function (req, res, next) {
+        if (next === void 0) { next = null; }
+        res.send("ESKETIT/restaurants");
+    };
+    Routes.prototype.restaurant = function (req, res, next) {
+        if (next === void 0) { next = null; }
+        res.send("ESKETIT/restaurants/" + req.params.id);
+    };
+    Routes.prototype.reviews = function (req, res, next) {
+        if (next === void 0) { next = null; }
+        res.send("ESKETIT/reviews");
+    };
+    Routes.prototype.review = function (req, res, next) {
+        if (next === void 0) { next = null; }
+        res.send("ESKETIT/reviews/" + req.params.id);
     };
     return Routes;
 }());

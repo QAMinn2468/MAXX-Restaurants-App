@@ -1,4 +1,5 @@
 import { createConnection, Connection, Schema, Model, Document, model } from "mongoose";
+import * as Mongoose from "mongoose";
 import * as uuid from "uuid/v1";
 import { Routes } from "./modules/routes";
 import { API } from "./modules/api";
@@ -33,7 +34,7 @@ export namespace DatabaseMethods {
         }
     }
 
-    export class User extends Document {
+    export class User {
         /**
          * PK
          */
@@ -44,7 +45,6 @@ export namespace DatabaseMethods {
         private _model: Model<Document>;
 
         constructor() {
-            super();
         }
 
         make(): this {
@@ -59,7 +59,7 @@ export namespace DatabaseMethods {
             return this;
         }
 
-        get model() {
+        get aModel() {
             return this._model.create({
                 userID: this.userID,
                 username: this.username,
@@ -68,7 +68,7 @@ export namespace DatabaseMethods {
         }
     }
 
-    export class Post extends Document {
+    export class Post {
         /**
          * PK
          */
@@ -102,13 +102,12 @@ export namespace DatabaseMethods {
         private _model: Model<Document>;
 
         constructor() {
-            super();
         }
 
         make(): this {
             const schema = new Schema({
                 postID: { type: String, required: true },
-                title: { type: String, required: true },
+                title: { type: String, default: "" },
                 content: { type: String, required: true },
                 user: { type: String, required: true },
                 postType: { type: String, required: true },
@@ -122,7 +121,7 @@ export namespace DatabaseMethods {
             return this;
         }
 
-        get model() {
+        get aModel() {
             return this._model.create({
                 postID: this.postID,
                 title: this.title,
@@ -136,7 +135,7 @@ export namespace DatabaseMethods {
         }
     }
 
-    export class Restaurant extends Document {
+    export class Restaurant {
         /**
          * PK
          */
@@ -153,7 +152,6 @@ export namespace DatabaseMethods {
         private _model: Model<Document>;
 
         constructor() {
-            super();
         }
 
         make(): this {
@@ -174,7 +172,7 @@ export namespace DatabaseMethods {
             return this;
         }
 
-        get model() {
+        get aModel() {
             return this._model.create({
                 restaurantID: this.restaurantID,
                 name: this.name,
@@ -189,7 +187,7 @@ export namespace DatabaseMethods {
         }
     }
 
-    export class PostType extends Document {
+    export class PostType {
         /**
          * PK
          */
@@ -199,7 +197,6 @@ export namespace DatabaseMethods {
         private _model: Model<Document>;
 
         constructor() {
-            super();
         }
 
         make(): this {
@@ -213,7 +210,7 @@ export namespace DatabaseMethods {
             return this;
         }
 
-        get model() {
+        get aModel() {
             return this._model.create({
                 postTypeID: this.postTypeID,
                 typeDescription: this.typeDescription,
@@ -221,7 +218,7 @@ export namespace DatabaseMethods {
         }
     }
 
-    export class RestaurantRatings extends Document {
+    export class RestaurantRatings {
         /**
          * PK
          */
@@ -235,7 +232,6 @@ export namespace DatabaseMethods {
         private _model: Model<Document>;
 
         constructor() {
-            super();
         }
 
         make(): this {
@@ -249,7 +245,7 @@ export namespace DatabaseMethods {
             return this;
         }
 
-        get model() {
+        get aModel() {
             return this._model.create({
                 restaurantRatingID: this.restaurantRatingID,
                 post: this.post,

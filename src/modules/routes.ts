@@ -16,8 +16,30 @@ export class Routes {
     }
 
     createRoutes() {
-        this.app.get("/", (req, res) => {
-            res.send("ESKETIT");
-        });
+        this.app.get("/", this.index);
+        this.app.get("/restaurants", this.restaurants);
+        this.app.get("/restaurants/:id", this.restaurant);
+        this.app.get("/reviews", this.reviews);
+        this.app.get("/reviews/:id", this.review);
+    }
+
+    index(req: express.Request, res: express.Response, next: express.NextFunction = null) {
+        res.send(`ESKETIT`);
+    }
+
+    restaurants(req: express.Request, res: express.Response, next: express.NextFunction = null) {
+        res.send(`ESKETIT/restaurants`);
+    }
+
+    restaurant(req: express.Request, res: express.Response, next: express.NextFunction = null) {
+        res.send(`ESKETIT/restaurants/${req.params.id}`);
+    }
+
+    reviews(req: express.Request, res: express.Response, next: express.NextFunction = null) {
+        res.send(`ESKETIT/reviews`);
+    }
+
+    review(req: express.Request, res: express.Response, next: express.NextFunction = null) {
+        res.send(`ESKETIT/reviews/${req.params.id}`);
     }
 }
