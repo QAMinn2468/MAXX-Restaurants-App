@@ -71,6 +71,8 @@ var DatabaseMethods;
         Post.prototype.make = function () {
             var schema = new mongoose_1.Schema({
                 postID: { type: String, required: true },
+                title: { type: String, required: true },
+                content: { type: String, required: true },
                 user: { type: String, required: true },
                 postType: { type: String, required: true },
                 restaurant: { type: String, required: true },
@@ -86,10 +88,13 @@ var DatabaseMethods;
             get: function () {
                 return this._model.create({
                     postID: this.postID,
+                    title: this.title,
+                    content: this.content,
                     user: this.user,
                     postType: this.postType,
                     restaurant: this.restaurant,
                     upvotes: this.upvotes,
+                    downvotes: this.downvotes,
                 });
             },
             enumerable: true,

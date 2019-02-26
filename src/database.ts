@@ -47,7 +47,7 @@ export namespace DatabaseMethods {
             super();
         }
 
-        make() {
+        make(): this {
             const schema = new Schema({
                 userID: { type: String, required: true },
                 username: { type: String, required: true },
@@ -73,6 +73,8 @@ export namespace DatabaseMethods {
          * PK
          */
         postID: string;
+        title: string;
+        content: string;
         /**
          *
          * FK: User.userID
@@ -103,9 +105,11 @@ export namespace DatabaseMethods {
             super();
         }
 
-        make() {
+        make(): this {
             const schema = new Schema({
                 postID: { type: String, required: true },
+                title: { type: String, required: true },
+                content: { type: String, required: true },
                 user: { type: String, required: true },
                 postType: { type: String, required: true },
                 restaurant: { type: String, required: true },
@@ -121,10 +125,13 @@ export namespace DatabaseMethods {
         get model() {
             return this._model.create({
                 postID: this.postID,
+                title: this.title,
+                content: this.content,
                 user: this.user,
                 postType: this.postType,
                 restaurant: this.restaurant,
                 upvotes: this.upvotes,
+                downvotes: this.downvotes,
             });
         }
     }
@@ -149,7 +156,7 @@ export namespace DatabaseMethods {
             super();
         }
 
-        make() {
+        make(): this {
             const schema = new Schema({
                 restaurantID: { type: String, required: true },
                 name: { type: String, required: true },
@@ -195,7 +202,7 @@ export namespace DatabaseMethods {
             super();
         }
 
-        make() {
+        make(): this {
             const schema = new Schema({
                 postTypeID: { type: Number, required: true },
                 typeDescription: { type: String, required: true }
@@ -231,7 +238,7 @@ export namespace DatabaseMethods {
             super();
         }
 
-        make() {
+        make(): this {
             const schema = new Schema({
                 restaurantRatingID: { type: String, required: true },
                 rating: { type: Number, required: true }
