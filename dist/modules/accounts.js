@@ -16,6 +16,12 @@ var Accounts = /** @class */ (function () {
     };
     Accounts.verifyAccount = function (username, password) {
         console.log("verifying account:", username, password);
+        var user = new database_1.DatabaseMethods.User();
+        user.username = username;
+        user.password = password;
+        user.find({
+            username: username
+        });
         return Accounts.createAccount(username, password); // THIS IS TEMPORARY
     };
     return Accounts;

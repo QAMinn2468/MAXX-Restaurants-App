@@ -54,16 +54,20 @@ export namespace DatabaseMethods {
 
         constructor() { super(); }
 
-        find(options: Record<keyof User, any>) {
+        find(options: ORecord<keyof User, any>) {
             return User.model.findOne(options);
         }
 
         create() {
-            return new User.model({
+            const doc = new User.model({
                 userID: this.userID,
                 username: this.username,
                 password: this.password,
             });
+
+            this.document = doc;
+
+            return doc;
         }
     }
 
@@ -88,15 +92,19 @@ export namespace DatabaseMethods {
 
         constructor() { super(); }
 
-        find(options: Record<keyof Session, any>) {
+        find(options: ORecord<keyof Session, any>) {
             return Session.model.findOne(options);
         }
 
         create() {
-            return new Session.model({
+            const doc = new Session.model({
                 sessionID: this.sessionID,
                 user: this.user,
             });
+
+            this.document = doc;
+
+            return doc;
         }
     }
 
@@ -154,12 +162,12 @@ export namespace DatabaseMethods {
             this.downvotes = [];
         }
 
-        find(options: Record<keyof Post, any>) {
+        find(options: ORecord<keyof Post, any>) {
             return Post.model.findOne(options);
         }
 
         create() {
-            return new Post.model({
+            const doc = new Post.model({
                 postID: this.postID,
                 title: this.title,
                 content: this.content,
@@ -169,6 +177,10 @@ export namespace DatabaseMethods {
                 upvotes: this.upvotes,
                 downvotes: this.downvotes,
             });
+
+            this.document = doc;
+
+            return doc;
         }
     }
 
@@ -209,12 +221,12 @@ export namespace DatabaseMethods {
             this.apt = "";
         }
 
-        find(options: Record<keyof Restaurant, any>) {
+        find(options: ORecord<keyof Restaurant, any>) {
             return Restaurant.model.findOne(options);
         }
 
         create() {
-            return new Restaurant.model({
+            const doc = new Restaurant.model({
                 restaurantID: this.restaurantID,
                 name: this.name,
                 description: this.description,
@@ -225,6 +237,10 @@ export namespace DatabaseMethods {
                 country: this.country,
                 zip: this.zip,
             });
+
+            this.document = doc;
+
+            return doc;
         }
     }
 
@@ -251,16 +267,20 @@ export namespace DatabaseMethods {
 
         constructor() { super(); }
 
-        find(options: Record<keyof RestaurantRatings, any>) {
+        find(options: ORecord<keyof RestaurantRatings, any>) {
             return RestaurantRatings.model.findOne(options);
         }
 
         create() {
-            return new RestaurantRatings.model({
+            const doc = new RestaurantRatings.model({
                 restaurantRatingID: this.restaurantRatingID,
                 post: this.post,
                 rating: this.rating,
             });
+
+            this.document = doc;
+
+            return doc;
         }
     }
 }

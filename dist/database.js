@@ -51,11 +51,13 @@ var DatabaseMethods;
             return User.model.findOne(options);
         };
         User.prototype.create = function () {
-            return new User.model({
+            var doc = new User.model({
                 userID: this.userID,
                 username: this.username,
                 password: this.password,
             });
+            this.document = doc;
+            return doc;
         };
         User.model = mongoose_1.model("users", new mongoose_1.Schema({
             userID: { type: String, required: true },
@@ -76,10 +78,12 @@ var DatabaseMethods;
             return Session.model.findOne(options);
         };
         Session.prototype.create = function () {
-            return new Session.model({
+            var doc = new Session.model({
                 sessionID: this.sessionID,
                 user: this.user,
             });
+            this.document = doc;
+            return doc;
         };
         Session.model = mongoose_1.model("sessions", new mongoose_1.Schema({
             sessionID: { type: String, required: true },
@@ -104,7 +108,7 @@ var DatabaseMethods;
             return Post.model.findOne(options);
         };
         Post.prototype.create = function () {
-            return new Post.model({
+            var doc = new Post.model({
                 postID: this.postID,
                 title: this.title,
                 content: this.content,
@@ -114,6 +118,8 @@ var DatabaseMethods;
                 upvotes: this.upvotes,
                 downvotes: this.downvotes,
             });
+            this.document = doc;
+            return doc;
         };
         Post.model = mongoose_1.model("posts", new mongoose_1.Schema({
             postID: { type: String, required: true },
@@ -142,7 +148,7 @@ var DatabaseMethods;
             return Restaurant.model.findOne(options);
         };
         Restaurant.prototype.create = function () {
-            return new Restaurant.model({
+            var doc = new Restaurant.model({
                 restaurantID: this.restaurantID,
                 name: this.name,
                 description: this.description,
@@ -153,6 +159,8 @@ var DatabaseMethods;
                 country: this.country,
                 zip: this.zip,
             });
+            this.document = doc;
+            return doc;
         };
         Restaurant.model = mongoose_1.model("restaurants", new mongoose_1.Schema({
             restaurantID: { type: String, required: true },
@@ -179,11 +187,13 @@ var DatabaseMethods;
             return RestaurantRatings.model.findOne(options);
         };
         RestaurantRatings.prototype.create = function () {
-            return new RestaurantRatings.model({
+            var doc = new RestaurantRatings.model({
                 restaurantRatingID: this.restaurantRatingID,
                 post: this.post,
                 rating: this.rating,
             });
+            this.document = doc;
+            return doc;
         };
         RestaurantRatings.model = mongoose_1.model("ratings", new mongoose_1.Schema({
             restaurantRatingID: { type: String, required: true },

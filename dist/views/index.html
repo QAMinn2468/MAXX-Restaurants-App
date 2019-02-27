@@ -7,12 +7,23 @@
 </head>
 <body>
     <div id="app">
-        <form action="/api/login" method="post">
-            <input type="text" name="username" value="username">
-            <input type="password" name="password" value="password">
-            <input type="text" name="athird" value="foobar">
-            <button>Submit</button>
-        </form>
+        <div>
+            <h2>Sign Up</h2>
+            <form action="/api/signup" method="post">
+                <input type="text" name="username" value="username">
+                <input type="password" name="password" value="password">
+                <input type="password" name="password-confirm" value="password">
+                <button>Submit</button>
+            </form>
+        </div>
+        <div>
+            <h2>Login</h2>
+            <form action="/api/login" method="post">
+                <input type="text" name="username" value="username">
+                <input type="password" name="password" value="password">
+                <button>Submit</button>
+            </form>
+        </div>
     </div>
     <script src="/js/bundle.dev.js"></script>
 </body>

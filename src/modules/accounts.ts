@@ -24,6 +24,14 @@ export class Accounts {
     static verifyAccount(username: string, password: string): Document {
         console.log("verifying account:", username, password);
 
+        const user = new DatabaseMethods.User();
+        user.username = username;
+        user.password = password;
+
+        user.find({
+            username: username
+        });
+
         return Accounts.createAccount(username, password); // THIS IS TEMPORARY
     }
 }

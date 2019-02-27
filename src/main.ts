@@ -6,6 +6,12 @@ import { API } from "./modules/api";
 import { DatabaseMethods } from "./database";
 import { join } from "path";
 
+declare global {
+    type ORecord<K extends keyof any, T> = {
+        [KK in K]?: T
+    }
+}
+
 const dbUsername = process.env["DB_USERNAME"];
 const dbPassword = process.env["DB_PASSWORD"];
 const dbPort = process.env["DB_PORT"];
