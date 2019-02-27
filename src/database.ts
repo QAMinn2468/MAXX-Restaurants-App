@@ -1,8 +1,8 @@
 import { createConnection, Connection, Schema, Model, Document, model } from "mongoose";
 import * as Mongoose from "mongoose";
-import * as uuid from "uuid/v1";
 import { Routes } from "./modules/routes";
 import { API } from "./modules/api";
+import { PostType } from "./modules/restaurants";
 
 export namespace DatabaseMethods {
     export class Database {
@@ -10,12 +10,6 @@ export namespace DatabaseMethods {
 
         routesModule: Routes;
         apiModule: API;
-
-        userSchema: Schema<any>;
-        postSchema: Schema<any>;
-        restaurantSchema: Schema<any>;
-        postTypeSchema: Schema<any>;
-        restaurantRatingsSchema: Schema<any>;
 
         onConnection: () => void;
         onFail: () => void;
@@ -42,25 +36,24 @@ export namespace DatabaseMethods {
         username: string;
         password: string;
 
-        private _model: Model<Document>;
-
-        constructor() {
-        }
-
-        make(): this {
-            const schema = new Schema({
+        private static model: Model<Document> = model("users",
+            new Schema({
                 userID: { type: String, required: true },
                 username: { type: String, required: true },
                 password: { type: String, required: true },
             }, {
-                    timestamps: true
-                });
-            this._model = model("users", schema);
-            return this;
+                timestamps: true
+            })
+        );
+
+        constructor() {}
+
+        find(options: Record<keyof User, any>) {
+            return User.model.findOne(options);
         }
 
-        get aModel() {
-            return this._model.create({
+        create() {
+            return User.model.create({
                 userID: this.userID,
                 username: this.username,
                 password: this.password,
@@ -81,10 +74,10 @@ export namespace DatabaseMethods {
          */
         user: string;
         /**
-         *
-         * FK: PostType.postTypeID
+         * 1 = review
+         * 2 = comment
          */
-        postType: string;
+        postType: PostType;
         /**
          *
          * FK: Restaurant.restaurantID
@@ -99,30 +92,33 @@ export namespace DatabaseMethods {
          */
         downvotes: string[];
 
-        private _model: Model<Document>;
-
-        constructor() {
-        }
-
-        make(): this {
-            const schema = new Schema({
+        private static model: Model<Document> = model("posts",
+            new Schema({
                 postID: { type: String, required: true },
                 title: { type: String, default: "" },
                 content: { type: String, required: true },
                 user: { type: String, required: true },
-                postType: { type: String, required: true },
+                postType: { type: Number, required: true },
                 restaurant: { type: String, required: true },
                 upvotes: { type: [String], default: [] },
                 downvotes: { type: [String], default: [] },
             }, {
                 timestamps: true
-            });
-            this._model = model("posts", schema);
-            return this;
+            })
+        );;
+
+        constructor() {
+            this.title = "";
+            this.upvotes = [];
+            this.downvotes = [];
         }
 
-        get aModel() {
-            return this._model.create({
+        find(options: Record<keyof Post, any>) {
+            return Post.model.findOne(options);
+        }
+
+        create() {
+            return Post.model.create({
                 postID: this.postID,
                 title: this.title,
                 content: this.content,
@@ -149,13 +145,8 @@ export namespace DatabaseMethods {
         country: string;
         zip: string;
 
-        private _model: Model<Document>;
-
-        constructor() {
-        }
-
-        make(): this {
-            const schema = new Schema({
+        private static model: Model<Document> = model("restaurants",
+            new Schema({
                 restaurantID: { type: String, required: true },
                 name: { type: String, required: true },
                 description: { type: String, default: "" },
@@ -166,14 +157,21 @@ export namespace DatabaseMethods {
                 country: { type: String, required: true },
                 zip: { type: String, required: true },
             }, {
-                    timestamps: true
-                });
-            this._model = model("restaurants", schema);
-            return this;
+                timestamps: true
+            })
+        );
+
+        constructor() {
+            this.description = "";
+            this.apt = "";
         }
 
-        get aModel() {
-            return this._model.create({
+        find(options: Record<keyof Restaurant, any>) {
+            return Restaurant.model.findOne(options);
+        }
+
+        create() {
+            return Restaurant.model.create({
                 restaurantID: this.restaurantID,
                 name: this.name,
                 description: this.description,
@@ -183,37 +181,6 @@ export namespace DatabaseMethods {
                 state: this.state,
                 country: this.country,
                 zip: this.zip,
-            });
-        }
-    }
-
-    export class PostType {
-        /**
-         * PK
-         */
-        postTypeID: number;
-        typeDescription: "comment" | "review";
-
-        private _model: Model<Document>;
-
-        constructor() {
-        }
-
-        make(): this {
-            const schema = new Schema({
-                postTypeID: { type: Number, required: true },
-                typeDescription: { type: String, required: true }
-            }, {
-                    timestamps: true
-                });
-            this._model = model("postTypes", schema);
-            return this;
-        }
-
-        get aModel() {
-            return this._model.create({
-                postTypeID: this.postTypeID,
-                typeDescription: this.typeDescription,
             });
         }
     }
@@ -229,24 +196,24 @@ export namespace DatabaseMethods {
         post: string;
         rating: number;
 
-        private _model: Model<Document>;
-
-        constructor() {
-        }
-
-        make(): this {
-            const schema = new Schema({
+        private static model: Model<Document> = model("ratings",
+            new Schema({
                 restaurantRatingID: { type: String, required: true },
-                rating: { type: Number, required: true }
+                post: { type: String, required: true },
+                rating: { type: Number, default: 0 }
             }, {
-                    timestamps: true
-                });
-            this._model = model("ratings", schema);
-            return this;
+                timestamps: true
+            })
+        );
+
+        constructor() {}
+
+        find(options: Record<keyof RestaurantRatings, any>) {
+            return RestaurantRatings.model.findOne(options);
         }
 
-        get aModel() {
-            return this._model.create({
+        create() {
+            return RestaurantRatings.model.create({
                 restaurantRatingID: this.restaurantRatingID,
                 post: this.post,
                 rating: this.rating,

@@ -23,159 +23,120 @@ var DatabaseMethods;
     var User = /** @class */ (function () {
         function User() {
         }
-        User.prototype.make = function () {
-            var schema = new mongoose_1.Schema({
-                userID: { type: String, required: true },
-                username: { type: String, required: true },
-                password: { type: String, required: true },
-            }, {
-                timestamps: true
-            });
-            this._model = mongoose_1.model("users", schema);
-            return this;
+        User.prototype.find = function (options) {
+            return User.model.findOne(options);
         };
-        Object.defineProperty(User.prototype, "aModel", {
-            get: function () {
-                return this._model.create({
-                    userID: this.userID,
-                    username: this.username,
-                    password: this.password,
-                });
-            },
-            enumerable: true,
-            configurable: true
-        });
+        User.prototype.create = function () {
+            return User.model.create({
+                userID: this.userID,
+                username: this.username,
+                password: this.password,
+            });
+        };
+        User.model = mongoose_1.model("users", new mongoose_1.Schema({
+            userID: { type: String, required: true },
+            username: { type: String, required: true },
+            password: { type: String, required: true },
+        }, {
+            timestamps: true
+        }));
         return User;
     }());
     DatabaseMethods.User = User;
     var Post = /** @class */ (function () {
         function Post() {
+            this.title = "";
+            this.upvotes = [];
+            this.downvotes = [];
         }
-        Post.prototype.make = function () {
-            var schema = new mongoose_1.Schema({
-                postID: { type: String, required: true },
-                title: { type: String, default: "" },
-                content: { type: String, required: true },
-                user: { type: String, required: true },
-                postType: { type: String, required: true },
-                restaurant: { type: String, required: true },
-                upvotes: { type: [String], default: [] },
-                downvotes: { type: [String], default: [] },
-            }, {
-                timestamps: true
-            });
-            this._model = mongoose_1.model("posts", schema);
-            return this;
+        ;
+        Post.prototype.find = function (options) {
+            return Post.model.findOne(options);
         };
-        Object.defineProperty(Post.prototype, "aModel", {
-            get: function () {
-                return this._model.create({
-                    postID: this.postID,
-                    title: this.title,
-                    content: this.content,
-                    user: this.user,
-                    postType: this.postType,
-                    restaurant: this.restaurant,
-                    upvotes: this.upvotes,
-                    downvotes: this.downvotes,
-                });
-            },
-            enumerable: true,
-            configurable: true
-        });
+        Post.prototype.create = function () {
+            return Post.model.create({
+                postID: this.postID,
+                title: this.title,
+                content: this.content,
+                user: this.user,
+                postType: this.postType,
+                restaurant: this.restaurant,
+                upvotes: this.upvotes,
+                downvotes: this.downvotes,
+            });
+        };
+        Post.model = mongoose_1.model("posts", new mongoose_1.Schema({
+            postID: { type: String, required: true },
+            title: { type: String, default: "" },
+            content: { type: String, required: true },
+            user: { type: String, required: true },
+            postType: { type: Number, required: true },
+            restaurant: { type: String, required: true },
+            upvotes: { type: [String], default: [] },
+            downvotes: { type: [String], default: [] },
+        }, {
+            timestamps: true
+        }));
         return Post;
     }());
     DatabaseMethods.Post = Post;
     var Restaurant = /** @class */ (function () {
         function Restaurant() {
+            this.description = "";
+            this.apt = "";
         }
-        Restaurant.prototype.make = function () {
-            var schema = new mongoose_1.Schema({
-                restaurantID: { type: String, required: true },
-                name: { type: String, required: true },
-                description: { type: String, default: "" },
-                street: { type: String, required: true },
-                apt: { type: String, default: "" },
-                city: { type: String, required: true },
-                state: { type: String, required: true },
-                country: { type: String, required: true },
-                zip: { type: String, required: true },
-            }, {
-                timestamps: true
-            });
-            this._model = mongoose_1.model("restaurants", schema);
-            return this;
+        Restaurant.prototype.find = function (options) {
+            return Restaurant.model.findOne(options);
         };
-        Object.defineProperty(Restaurant.prototype, "aModel", {
-            get: function () {
-                return this._model.create({
-                    restaurantID: this.restaurantID,
-                    name: this.name,
-                    description: this.description,
-                    street: this.street,
-                    apt: this.apt,
-                    city: this.city,
-                    state: this.state,
-                    country: this.country,
-                    zip: this.zip,
-                });
-            },
-            enumerable: true,
-            configurable: true
-        });
+        Restaurant.prototype.create = function () {
+            return Restaurant.model.create({
+                restaurantID: this.restaurantID,
+                name: this.name,
+                description: this.description,
+                street: this.street,
+                apt: this.apt,
+                city: this.city,
+                state: this.state,
+                country: this.country,
+                zip: this.zip,
+            });
+        };
+        Restaurant.model = mongoose_1.model("restaurants", new mongoose_1.Schema({
+            restaurantID: { type: String, required: true },
+            name: { type: String, required: true },
+            description: { type: String, default: "" },
+            street: { type: String, required: true },
+            apt: { type: String, default: "" },
+            city: { type: String, required: true },
+            state: { type: String, required: true },
+            country: { type: String, required: true },
+            zip: { type: String, required: true },
+        }, {
+            timestamps: true
+        }));
         return Restaurant;
     }());
     DatabaseMethods.Restaurant = Restaurant;
-    var PostType = /** @class */ (function () {
-        function PostType() {
-        }
-        PostType.prototype.make = function () {
-            var schema = new mongoose_1.Schema({
-                postTypeID: { type: Number, required: true },
-                typeDescription: { type: String, required: true }
-            }, {
-                timestamps: true
-            });
-            this._model = mongoose_1.model("postTypes", schema);
-            return this;
-        };
-        Object.defineProperty(PostType.prototype, "aModel", {
-            get: function () {
-                return this._model.create({
-                    postTypeID: this.postTypeID,
-                    typeDescription: this.typeDescription,
-                });
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return PostType;
-    }());
-    DatabaseMethods.PostType = PostType;
     var RestaurantRatings = /** @class */ (function () {
         function RestaurantRatings() {
         }
-        RestaurantRatings.prototype.make = function () {
-            var schema = new mongoose_1.Schema({
-                restaurantRatingID: { type: String, required: true },
-                rating: { type: Number, required: true }
-            }, {
-                timestamps: true
-            });
-            this._model = mongoose_1.model("ratings", schema);
-            return this;
+        RestaurantRatings.prototype.find = function (options) {
+            return RestaurantRatings.model.findOne(options);
         };
-        Object.defineProperty(RestaurantRatings.prototype, "aModel", {
-            get: function () {
-                return this._model.create({
-                    restaurantRatingID: this.restaurantRatingID,
-                    post: this.post,
-                    rating: this.rating,
-                });
-            },
-            enumerable: true,
-            configurable: true
-        });
+        RestaurantRatings.prototype.create = function () {
+            return RestaurantRatings.model.create({
+                restaurantRatingID: this.restaurantRatingID,
+                post: this.post,
+                rating: this.rating,
+            });
+        };
+        RestaurantRatings.model = mongoose_1.model("ratings", new mongoose_1.Schema({
+            restaurantRatingID: { type: String, required: true },
+            post: { type: String, required: true },
+            rating: { type: Number, default: 0 }
+        }, {
+            timestamps: true
+        }));
         return RestaurantRatings;
     }());
     DatabaseMethods.RestaurantRatings = RestaurantRatings;

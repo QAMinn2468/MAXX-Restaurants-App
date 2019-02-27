@@ -1,11 +1,9 @@
 var cp = require("child_process");
 
-// this goes in package.json
-// "build": "browserify -t [envify --NODE_ENV production] dist/main.js | uglifyjs -c -m > dist/bundle.prod.js"
 var commands = [
     `${/^win/.test(process.platform) ? 'tsc.cmd' : 'tsc'} --w`,
     `${/^win/.test(process.platform) ? 'sass.cmd' : 'sass'} --watch src:dist`,
-    // `${/^win/.test(process.platform) ? 'watchify.cmd' : 'watchify'} dist/main.js -o dist/bundle.dev.js`,
+    `${/^win/.test(process.platform) ? 'watchify.cmd' : 'watchify'} dist/public/js/index.js -o dist/public/js/bundle.dev.js`,
 ];
 var processes = [];
 

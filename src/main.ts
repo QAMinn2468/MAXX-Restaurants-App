@@ -2,6 +2,7 @@ import * as express from "express";
 import { Routes } from "./modules/routes";
 import { API } from "./modules/api";
 import { DatabaseMethods } from "./database";
+import { join } from "path";
 
 const dbUsername = process.env["DB_USERNAME"];
 const dbPassword = process.env["DB_PASSWORD"];
@@ -29,6 +30,7 @@ export class Main {
             this.routesModule = new Routes(this);
             this.apiModule = new API(this);
 
+            this.app.use(express.static(join(__dirname, "public")));
             this.app.use(this.routesModule.routes);
             this.app.use("/api", this.apiModule.routes);
 

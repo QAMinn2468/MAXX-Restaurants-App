@@ -1,5 +1,6 @@
 import * as express from "express";
 import { Main } from "../main";
+import { join } from "path";
 
 export class Routes {
     app = express();
@@ -16,30 +17,40 @@ export class Routes {
     }
 
     createRoutes() {
-        this.app.get("/", this.index);
-        this.app.get("/restaurants", this.restaurants);
-        this.app.get("/restaurants/:id", this.restaurant);
-        this.app.get("/reviews", this.reviews);
-        this.app.get("/reviews/:id", this.review);
+        this.app.get("/", this.indexView);
+        this.app.get("/restaurants", this.restaurantsView);
+        this.app.get("/restaurants/:id", this.restaurantView);
+        this.app.get("/reviews", this.reviewsView);
+        this.app.get("/reviews/:id", this.reviewView);
+        this.app.get("/login", this.loginView);
+        this.app.get("/signup", this.signupView);
     }
 
-    index(req: express.Request, res: express.Response, next: express.NextFunction = null) {
-        res.send(`ESKETIT`);
+    indexView(req: express.Request, res: express.Response, next: express.NextFunction = null) {
+        res.sendFile(join(__dirname, "../views/index.html"));
     }
 
-    restaurants(req: express.Request, res: express.Response, next: express.NextFunction = null) {
+    restaurantsView(req: express.Request, res: express.Response, next: express.NextFunction = null) {
         res.send(`ESKETIT/restaurants`);
     }
 
-    restaurant(req: express.Request, res: express.Response, next: express.NextFunction = null) {
+    restaurantView(req: express.Request, res: express.Response, next: express.NextFunction = null) {
         res.send(`ESKETIT/restaurants/${req.params.id}`);
     }
 
-    reviews(req: express.Request, res: express.Response, next: express.NextFunction = null) {
+    reviewsView(req: express.Request, res: express.Response, next: express.NextFunction = null) {
         res.send(`ESKETIT/reviews`);
     }
 
-    review(req: express.Request, res: express.Response, next: express.NextFunction = null) {
+    reviewView(req: express.Request, res: express.Response, next: express.NextFunction = null) {
         res.send(`ESKETIT/reviews/${req.params.id}`);
+    }
+
+    loginView(req: express.Request, res: express.Response, next: express.NextFunction = null) {
+        res.send(`ESKETIT/login`);
+    }
+
+    signupView(req: express.Request, res: express.Response, next: express.NextFunction = null) {
+        res.send(`ESKETIT/signup`);
     }
 }
