@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var express = require("express");
+var bodyParser = require("body-parser");
+var cookieParser = require("cookie-parser");
 var routes_1 = require("./modules/routes");
 var api_1 = require("./modules/api");
 var database_1 = require("./database");
@@ -18,6 +20,9 @@ var Main = /** @class */ (function () {
         this.database.onConnection = function () {
             _this.routesModule = new routes_1.Routes(_this);
             _this.apiModule = new api_1.API(_this);
+            _this.app.use(bodyParser.urlencoded({ extended: true }));
+            _this.app.use(bodyParser.json());
+            _this.app.use(cookieParser());
             _this.app.use(express.static(path_1.join(__dirname, "public")));
             _this.app.use(_this.routesModule.routes);
             _this.app.use("/api", _this.apiModule.routes);

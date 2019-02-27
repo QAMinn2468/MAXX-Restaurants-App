@@ -19,12 +19,21 @@ export class API {
     }
 
     createRoutes() {
-        this.app.get("/login", this.loginAPI);
-        this.app.get("/signup", this.signupAPI);
+        this.app.post("/login", this.loginAPI);
+        this.app.post("/signup", this.signupAPI);
     }
 
     loginAPI(req: express.Request, res: express.Response, next: express.NextFunction = null) {
         res.send(`ESKETIT/api/login`);
+
+        console.log(req.body);
+        const doc = Accounts.verifyAccount(req.body.username, req.body.password);
+
+        if(doc) {
+            console.log("doc found");
+        } else {
+            console.log("doc not found");
+        }
     }
 
     signupAPI(req: express.Request, res: express.Response, next: express.NextFunction = null) {

@@ -1,4 +1,6 @@
 import * as express from "express";
+import * as bodyParser from "body-parser";
+import * as cookieParser from "cookie-parser";
 import { Routes } from "./modules/routes";
 import { API } from "./modules/api";
 import { DatabaseMethods } from "./database";
@@ -29,6 +31,10 @@ export class Main {
         this.database.onConnection = () => {
             this.routesModule = new Routes(this);
             this.apiModule = new API(this);
+
+            this.app.use(bodyParser.urlencoded({ extended: true }));
+            this.app.use(bodyParser.json());
+            this.app.use(cookieParser());
 
             this.app.use(express.static(join(__dirname, "public")));
             this.app.use(this.routesModule.routes);

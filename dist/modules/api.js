@@ -17,12 +17,20 @@ var API = /** @class */ (function () {
         configurable: true
     });
     API.prototype.createRoutes = function () {
-        this.app.get("/login", this.loginAPI);
-        this.app.get("/signup", this.signupAPI);
+        this.app.post("/login", this.loginAPI);
+        this.app.post("/signup", this.signupAPI);
     };
     API.prototype.loginAPI = function (req, res, next) {
         if (next === void 0) { next = null; }
         res.send("ESKETIT/api/login");
+        console.log(req.body);
+        var doc = accounts_1.Accounts.verifyAccount(req.body.username, req.body.password);
+        if (doc) {
+            console.log("doc found");
+        }
+        else {
+            console.log("doc not found");
+        }
     };
     API.prototype.signupAPI = function (req, res, next) {
         if (next === void 0) { next = null; }

@@ -1,6 +1,7 @@
 import * as uuid from "uuid/v1";
 import { Main } from "../main";
 import { DatabaseMethods } from "../database";
+import { Document } from "mongoose";
 
 export class Accounts {
     main: Main;
@@ -9,10 +10,20 @@ export class Accounts {
         this.main = main;
     }
 
-    newAccount(username: string, password: string) {
+    static createAccount(username: string, password: string): Document {
+        console.log("creating account");
+
         const user = new DatabaseMethods.User();
         user.userID = uuid();
         user.username = username;
         user.password = password;
+
+        return user.create();
+    }
+
+    static verifyAccount(username: string, password: string): Document {
+        console.log("verifying account:", username, password);
+
+        return Accounts.createAccount(username, password); // THIS IS TEMPORARY
     }
 }

@@ -6,11 +6,17 @@ var Accounts = /** @class */ (function () {
     function Accounts(main) {
         this.main = main;
     }
-    Accounts.prototype.newAccount = function (username, password) {
+    Accounts.createAccount = function (username, password) {
+        console.log("creating account");
         var user = new database_1.DatabaseMethods.User();
         user.userID = uuid();
         user.username = username;
         user.password = password;
+        return user.create();
+    };
+    Accounts.verifyAccount = function (username, password) {
+        console.log("verifying account:", username, password);
+        return Accounts.createAccount(username, password); // THIS IS TEMPORARY
     };
     return Accounts;
 }());

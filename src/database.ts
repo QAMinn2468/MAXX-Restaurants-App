@@ -28,7 +28,13 @@ export namespace DatabaseMethods {
         }
     }
 
-    export class User {
+    class facilitator {
+        document: Document = null;
+        find(options: Record<string, any>): Mongoose.DocumentQuery<Document, Document, {}> { return new Mongoose.DocumentQuery<Document, Document, {}>(); }
+        create(): Document { return null; }
+    }
+
+    export class User extends facilitator {
         /**
          * PK
          */
@@ -41,19 +47,19 @@ export namespace DatabaseMethods {
                 userID: { type: String, required: true },
                 username: { type: String, required: true },
                 password: { type: String, required: true },
-            }, {
+            } as Record<keyof User, any>, {
                 timestamps: true
             })
         );
 
-        constructor() {}
+        constructor() { super(); }
 
         find(options: Record<keyof User, any>) {
             return User.model.findOne(options);
         }
 
         create() {
-            return User.model.create({
+            return new User.model({
                 userID: this.userID,
                 username: this.username,
                 password: this.password,
@@ -61,7 +67,40 @@ export namespace DatabaseMethods {
         }
     }
 
-    export class Post {
+    export class Session extends facilitator {
+        /**
+         * PK
+         */
+        sessionID: string;
+        /**
+         * FK: User.userID
+         */
+        user: string;
+
+        private static model: Model<Document> = model("sessions",
+            new Schema({
+                sessionID: { type: String, required: true },
+                user: { type: String, required: true },
+            } as Record<keyof Session, any>, {
+                timestamps: true
+            })
+        );
+
+        constructor() { super(); }
+
+        find(options: Record<keyof Session, any>) {
+            return Session.model.findOne(options);
+        }
+
+        create() {
+            return new Session.model({
+                sessionID: this.sessionID,
+                user: this.user,
+            });
+        }
+    }
+
+    export class Post extends facilitator {
         /**
          * PK
          */
@@ -102,12 +141,14 @@ export namespace DatabaseMethods {
                 restaurant: { type: String, required: true },
                 upvotes: { type: [String], default: [] },
                 downvotes: { type: [String], default: [] },
-            }, {
+            } as Record<keyof Post, any>, {
                 timestamps: true
             })
         );;
 
         constructor() {
+            super();
+
             this.title = "";
             this.upvotes = [];
             this.downvotes = [];
@@ -118,7 +159,7 @@ export namespace DatabaseMethods {
         }
 
         create() {
-            return Post.model.create({
+            return new Post.model({
                 postID: this.postID,
                 title: this.title,
                 content: this.content,
@@ -131,7 +172,7 @@ export namespace DatabaseMethods {
         }
     }
 
-    export class Restaurant {
+    export class Restaurant extends facilitator {
         /**
          * PK
          */
@@ -156,12 +197,14 @@ export namespace DatabaseMethods {
                 state: { type: String, required: true },
                 country: { type: String, required: true },
                 zip: { type: String, required: true },
-            }, {
+            } as Record<keyof Restaurant, any>, {
                 timestamps: true
             })
         );
 
         constructor() {
+            super();
+
             this.description = "";
             this.apt = "";
         }
@@ -171,7 +214,7 @@ export namespace DatabaseMethods {
         }
 
         create() {
-            return Restaurant.model.create({
+            return new Restaurant.model({
                 restaurantID: this.restaurantID,
                 name: this.name,
                 description: this.description,
@@ -185,7 +228,7 @@ export namespace DatabaseMethods {
         }
     }
 
-    export class RestaurantRatings {
+    export class RestaurantRatings extends facilitator {
         /**
          * PK
          */
@@ -201,19 +244,19 @@ export namespace DatabaseMethods {
                 restaurantRatingID: { type: String, required: true },
                 post: { type: String, required: true },
                 rating: { type: Number, default: 0 }
-            }, {
+            } as Record<keyof RestaurantRatings, any>, {
                 timestamps: true
             })
         );
 
-        constructor() {}
+        constructor() { super(); }
 
         find(options: Record<keyof RestaurantRatings, any>) {
             return RestaurantRatings.model.findOne(options);
         }
 
         create() {
-            return RestaurantRatings.model.create({
+            return new RestaurantRatings.model({
                 restaurantRatingID: this.restaurantRatingID,
                 post: this.post,
                 rating: this.rating,

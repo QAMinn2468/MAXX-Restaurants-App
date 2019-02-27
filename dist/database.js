@@ -1,6 +1,20 @@
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 Object.defineProperty(exports, "__esModule", { value: true });
 var mongoose_1 = require("mongoose");
+var Mongoose = require("mongoose");
 var DatabaseMethods;
 (function (DatabaseMethods) {
     var Database = /** @class */ (function () {
@@ -20,14 +34,24 @@ var DatabaseMethods;
         return Database;
     }());
     DatabaseMethods.Database = Database;
-    var User = /** @class */ (function () {
+    var facilitator = /** @class */ (function () {
+        function facilitator() {
+            this.document = null;
+        }
+        facilitator.prototype.find = function (options) { return new Mongoose.DocumentQuery(); };
+        facilitator.prototype.create = function () { return null; };
+        return facilitator;
+    }());
+    var User = /** @class */ (function (_super) {
+        __extends(User, _super);
         function User() {
+            return _super.call(this) || this;
         }
         User.prototype.find = function (options) {
             return User.model.findOne(options);
         };
         User.prototype.create = function () {
-            return User.model.create({
+            return new User.model({
                 userID: this.userID,
                 username: this.username,
                 password: this.password,
@@ -41,20 +65,46 @@ var DatabaseMethods;
             timestamps: true
         }));
         return User;
-    }());
+    }(facilitator));
     DatabaseMethods.User = User;
-    var Post = /** @class */ (function () {
+    var Session = /** @class */ (function (_super) {
+        __extends(Session, _super);
+        function Session() {
+            return _super.call(this) || this;
+        }
+        Session.prototype.find = function (options) {
+            return Session.model.findOne(options);
+        };
+        Session.prototype.create = function () {
+            return new Session.model({
+                sessionID: this.sessionID,
+                user: this.user,
+            });
+        };
+        Session.model = mongoose_1.model("sessions", new mongoose_1.Schema({
+            sessionID: { type: String, required: true },
+            user: { type: String, required: true },
+        }, {
+            timestamps: true
+        }));
+        return Session;
+    }(facilitator));
+    DatabaseMethods.Session = Session;
+    var Post = /** @class */ (function (_super) {
+        __extends(Post, _super);
         function Post() {
-            this.title = "";
-            this.upvotes = [];
-            this.downvotes = [];
+            var _this = _super.call(this) || this;
+            _this.title = "";
+            _this.upvotes = [];
+            _this.downvotes = [];
+            return _this;
         }
         ;
         Post.prototype.find = function (options) {
             return Post.model.findOne(options);
         };
         Post.prototype.create = function () {
-            return Post.model.create({
+            return new Post.model({
                 postID: this.postID,
                 title: this.title,
                 content: this.content,
@@ -78,18 +128,21 @@ var DatabaseMethods;
             timestamps: true
         }));
         return Post;
-    }());
+    }(facilitator));
     DatabaseMethods.Post = Post;
-    var Restaurant = /** @class */ (function () {
+    var Restaurant = /** @class */ (function (_super) {
+        __extends(Restaurant, _super);
         function Restaurant() {
-            this.description = "";
-            this.apt = "";
+            var _this = _super.call(this) || this;
+            _this.description = "";
+            _this.apt = "";
+            return _this;
         }
         Restaurant.prototype.find = function (options) {
             return Restaurant.model.findOne(options);
         };
         Restaurant.prototype.create = function () {
-            return Restaurant.model.create({
+            return new Restaurant.model({
                 restaurantID: this.restaurantID,
                 name: this.name,
                 description: this.description,
@@ -115,16 +168,18 @@ var DatabaseMethods;
             timestamps: true
         }));
         return Restaurant;
-    }());
+    }(facilitator));
     DatabaseMethods.Restaurant = Restaurant;
-    var RestaurantRatings = /** @class */ (function () {
+    var RestaurantRatings = /** @class */ (function (_super) {
+        __extends(RestaurantRatings, _super);
         function RestaurantRatings() {
+            return _super.call(this) || this;
         }
         RestaurantRatings.prototype.find = function (options) {
             return RestaurantRatings.model.findOne(options);
         };
         RestaurantRatings.prototype.create = function () {
-            return RestaurantRatings.model.create({
+            return new RestaurantRatings.model({
                 restaurantRatingID: this.restaurantRatingID,
                 post: this.post,
                 rating: this.rating,
@@ -138,6 +193,6 @@ var DatabaseMethods;
             timestamps: true
         }));
         return RestaurantRatings;
-    }());
+    }(facilitator));
     DatabaseMethods.RestaurantRatings = RestaurantRatings;
 })(DatabaseMethods = exports.DatabaseMethods || (exports.DatabaseMethods = {}));

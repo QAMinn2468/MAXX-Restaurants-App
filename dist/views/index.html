@@ -6,7 +6,14 @@
     <title>Document</title>
 </head>
 <body>
-    <div id="app"></div>
+    <div id="app">
+        <form action="/api/login" method="post">
+            <input type="text" name="username" value="username">
+            <input type="password" name="password" value="password">
+            <input type="text" name="athird" value="foobar">
+            <button>Submit</button>
+        </form>
+    </div>
     <script src="/js/bundle.dev.js"></script>
 </body>
 </html>
