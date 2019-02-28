@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Kim McCaffrey, Shariff Rudolph, Darryl Dixon">
+    <title>Add a MAXX Restaurant!</title>
+    <link rel="stylesheet" href="style.css">
+
+  </head>
+  <body>
+    <!-- <nav>
+      <ul class="nav">
+        <li><a href="SEARCH_LINK">Search</a></li>
+        <li><a href="index.html">Main Page</a></li>
+      </ul>
+    </nav>                                                                      Consider adding this functionality later.-->
+    <h1>Restaurants to the MAXX!</h1>
+    <img src="image\20181113_135231_2.jpg" class="maxxLogo-small" alt="MAXX Potential Logo">
+    <h2>Add a Restaurant:</h2>
+    <br>
+    <br>
+     <div class="container">
+        <form class="addRest" action="index.html" method="post">  <!-- For now, the user is returned to the main screen. -->
+
+        <label for="addName">Restaurant Name: </label>
+        <input id="addName" type="text" name="nameRest" placeholder=" Name of Restaurant" autofocus ><br><br>
+
+        <label for="addTypeFood">Type of Food Served: </label>
+        <input id="addTypeFood" type="text" name="typeRest" placeholder=" Type of Food Served"><br><br>
+
+        <label for="phoneNumber">Restaurant Phone: </label>
+        <input id="phoneNumber" type="text" name="phoneRest" placeholder=" Phone Number" ><br><br>
+
+        <label for="address">Restaurant Address: </label>
+        <input id="address" type="text" name="addressRest" placeholder=" Address"><br><br>
+
+        <label >Dine In/Carry Out/Delivery </label><br>
+        <input type="radio" name="dineInRest" value="Dine-In">
+        <input type="radio" name="carryOutRest" value="Carry-Out">
+        <input type="radio" name="delivery" value="Delivery"><br><br>
+
+        <label >Payment Options:<br>
+           (MC/Visa, Discover, Other credit card) </label><br>
+        <input type="radio" name="mcVisa" value="MC-and-Visa">
+        <input type="radio" name="discover" value="Discover">
+        <input type="radio" name="otherCC" value="Other-Credit-Cards"><br><br>
+
+        <label for="hoursRest">Open times: </label>
+        <input id="hoursRest" type="text" name="hoursRest" placeholder=" Hours open"><br><br>
+
+        <!-- <p>* <em>these fields are required</p> -->
+
+
+         <input type="submit" name="newRest" value="Submit">
+         <button href="add.html">Cancel</button>
+       </form>
+     </div>
+
+
+
+
+
+  </body>
+</html>
