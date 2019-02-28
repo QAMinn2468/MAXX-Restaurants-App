@@ -19,24 +19,31 @@ export class API {
     }
 
     createRoutes() {
-        this.app.post("/login", this.loginAPI);
-        this.app.post("/signup", this.signupAPI);
+        this.app.post("/login", this.loginAPI.bind(this));
+        this.app.post("/signup", this.signupAPI.bind(this));
     }
 
     loginAPI(req: express.Request, res: express.Response, next: express.NextFunction = null) {
-        res.send(`ESKETIT/api/login`);
+        const docPromise = this.accounts.authenticateAccount(req.body.username, req.body.password);
 
-        console.log(req.body);
-        const doc = Accounts.verifyAccount(req.body.username, req.body.password);
-
-        if(doc) {
-            console.log("doc found");
-        } else {
-            console.log("doc not found");
-        }
+        docPromise.then((user) => {
+            if(user) {
+                res.send(`ESKETIT/api/login\n\r${JSON.stringify(user)}`);
+                console.log("doc found");
+            } else {
+                res.send(`ESKETIT/api/login\n\rNo Doc`);
+                console.log("doc not found");
+            }
+        }).catch(e => {
+            console.error(e);
+            res.send(`ESKETIT/api/login\n\rBig Error`);
+        });
     }
 
     signupAPI(req: express.Request, res: express.Response, next: express.NextFunction = null) {
-        res.send(`ESKETIT/api/signup`);
+        this.accounts.createAccount(req.body.username, req.body.password)
+        .then(doc => {
+            res.send(`ESKETIT/api/signup\n\r${JSON.stringify(doc)}`);
+            }).catch(e => console.error(e));
     }
 }

@@ -1,7 +1,8 @@
 import * as uuid from "uuid/v1";
-import { Main } from "../main";
-import { DatabaseMethods } from "../database";
 import { Document } from "mongoose";
+import * as bcrypt from "bcryptjs";
+import { Main } from "../main";
+import { DatabaseMethods } from "./database";
 
 export class Accounts {
     main: Main;
@@ -10,28 +11,49 @@ export class Accounts {
         this.main = main;
     }
 
-    static createAccount(username: string, password: string): Document {
+    createAccount(username: string, password: string): Promise<DatabaseMethods.User> {
         console.log("creating account");
 
-        const user = new DatabaseMethods.User();
-        user.userID = uuid();
-        user.username = username;
-        user.password = password;
+        return new Promise<DatabaseMethods.User>((resolve, reject) => {
+            const user = new DatabaseMethods.User(this.main.database);
+            user.userID = uuid();
+            user.username = username;
+            bcrypt.genSalt()
+            .then(salt => bcrypt.hash(password, salt))
+            .then(hash => {
+                console.log("hash:", hash);
 
-        return user.create();
+                user.password = hash;
+
+                try {
+                    user.create()
+                        .save()
+                        .then((savedDoc) => {
+                            console.log("new user saved", savedDoc);
+                            resolve(new DatabaseMethods.User(this.main.database, savedDoc));
+                        }).catch(e => console.error(e));
+                } catch (err) {
+                    reject(err);
+                }
+            });
+        });
     }
 
-    static verifyAccount(username: string, password: string): Document {
+    authenticateAccount(username: string, password: string): Promise<DatabaseMethods.User> {
         console.log("verifying account:", username, password);
 
-        const user = new DatabaseMethods.User();
-        user.username = username;
-        user.password = password;
+        const user = new DatabaseMethods.User(this.main.database);
 
-        user.find({
-            username: username
+        return new Promise<DatabaseMethods.User>((resolve, reject) => {
+            user.find({
+                username: username
+            })
+            .then(doc => {
+                console.log("got doc", doc);
+
+                bcrypt.compare(password, doc.password)
+                resolve(doc);
+            }).catch(e => console.error(e));
         });
-
-        return Accounts.createAccount(username, password); // THIS IS TEMPORARY
     }
 }

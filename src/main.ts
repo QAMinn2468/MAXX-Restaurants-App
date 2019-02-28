@@ -3,13 +3,15 @@ import * as bodyParser from "body-parser";
 import * as cookieParser from "cookie-parser";
 import { Routes } from "./modules/routes";
 import { API } from "./modules/api";
-import { DatabaseMethods } from "./database";
+import { DatabaseMethods } from "./modules/database";
 import { join } from "path";
 
 declare global {
     type ORecord<K extends keyof any, T> = {
         [KK in K]?: T
     }
+
+    type Primatives<T> = { [Key in keyof T]?: T[Key] extends (String | Number | Boolean) ? Key : never }[keyof T]
 }
 
 const dbUsername = process.env["DB_USERNAME"];

@@ -14,8 +14,6 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var mongoose_1 = require("mongoose");
-var xxx;
-console.log("xxx", xxx);
 var DatabaseMethods;
 (function (DatabaseMethods) {
     var Database = /** @class */ (function () {
@@ -90,9 +88,12 @@ var DatabaseMethods;
         }
         Facilitator.prototype.find = function (options) { return null; };
         Facilitator.prototype.create = function () { return null; };
-        Facilitator.prototype.assignData = function (keys, doc) {
+        Facilitator.prototype.addDoc = function (doc) { this.assignData(doc); };
+        Facilitator.prototype.assignData = function (doc) {
             var _this = this;
-            keys.map(function (k) {
+            if (!doc)
+                return;
+            this.keyList.map(function (k) {
                 _this[k] = doc[k];
             });
         };
@@ -104,13 +105,14 @@ var DatabaseMethods;
         function User(db, doc) {
             if (doc === void 0) { doc = null; }
             var _this = _super.call(this, db) || this;
-            _this.model = db.userModel;
-            _this.document = doc;
-            _this.assignData([
+            _this.keyList = [
                 "userID",
                 "username",
                 "password",
-            ], doc);
+            ];
+            _this.model = db.userModel;
+            _this.document = doc;
+            _this.addDoc(doc);
             return _this;
         }
         User.prototype.find = function (options) {
@@ -120,6 +122,7 @@ var DatabaseMethods;
                     if (err)
                         return reject(err);
                     _this.document = doc;
+                    _this.addDoc(doc);
                     resolve(_this);
                 });
             });
@@ -141,12 +144,13 @@ var DatabaseMethods;
         function Session(db, doc) {
             if (doc === void 0) { doc = null; }
             var _this = _super.call(this, db) || this;
-            _this.model = db.sessionModel;
-            _this.document = doc;
-            _this.assignData([
+            _this.keyList = [
                 "sessionID",
                 "user",
-            ], doc);
+            ];
+            _this.model = db.sessionModel;
+            _this.document = doc;
+            _this.addDoc(doc);
             return _this;
         }
         Session.prototype.find = function (options) {
@@ -156,6 +160,7 @@ var DatabaseMethods;
                     if (err)
                         return reject(err);
                     _this.document = doc;
+                    _this.addDoc(doc);
                     resolve(_this);
                 });
             });
@@ -176,12 +181,7 @@ var DatabaseMethods;
         function Post(db, doc) {
             if (doc === void 0) { doc = null; }
             var _this = _super.call(this, db) || this;
-            _this.document = doc;
-            _this.model = db.postModel;
-            _this.title = "";
-            _this.upvotes = [];
-            _this.downvotes = [];
-            _this.assignData([
+            _this.keyList = [
                 "postID",
                 "title",
                 "content",
@@ -190,7 +190,13 @@ var DatabaseMethods;
                 "restaurant",
                 "upvotes",
                 "downvotes",
-            ], doc);
+            ];
+            _this.document = doc;
+            _this.model = db.postModel;
+            _this.title = "";
+            _this.upvotes = [];
+            _this.downvotes = [];
+            _this.addDoc(doc);
             return _this;
         }
         Post.prototype.find = function (options) {
@@ -200,6 +206,7 @@ var DatabaseMethods;
                     if (err)
                         return reject(err);
                     _this.document = doc;
+                    _this.addDoc(doc);
                     resolve(_this);
                 });
             });
@@ -226,11 +233,7 @@ var DatabaseMethods;
         function Restaurant(db, doc) {
             if (doc === void 0) { doc = null; }
             var _this = _super.call(this, db) || this;
-            _this.document = doc;
-            _this.model = db.restaurantModel;
-            _this.description = "";
-            _this.apt = "";
-            _this.assignData([
+            _this.keyList = [
                 "restaurantID",
                 "name",
                 "description",
@@ -240,7 +243,12 @@ var DatabaseMethods;
                 "state",
                 "country",
                 "zip",
-            ], doc);
+            ];
+            _this.document = doc;
+            _this.model = db.restaurantModel;
+            _this.description = "";
+            _this.apt = "";
+            _this.addDoc(doc);
             return _this;
         }
         Restaurant.prototype.find = function (options) {
@@ -250,6 +258,7 @@ var DatabaseMethods;
                     if (err)
                         return reject(err);
                     _this.document = doc;
+                    _this.addDoc(doc);
                     resolve(_this);
                 });
             });
@@ -277,13 +286,14 @@ var DatabaseMethods;
         function RestaurantRating(db, doc) {
             if (doc === void 0) { doc = null; }
             var _this = _super.call(this, db) || this;
-            _this.document = doc;
-            _this.model = db.restaurantRatingModel;
-            _this.assignData([
+            _this.keyList = [
                 "restaurantRatingID",
                 "post",
                 "rating",
-            ], doc);
+            ];
+            _this.document = doc;
+            _this.model = db.restaurantRatingModel;
+            _this.addDoc(doc);
             return _this;
         }
         RestaurantRating.prototype.find = function (options) {
@@ -293,6 +303,7 @@ var DatabaseMethods;
                     if (err)
                         return reject(err);
                     _this.document = doc;
+                    _this.addDoc(doc);
                     resolve(_this);
                 });
             });
