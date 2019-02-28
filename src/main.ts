@@ -7,11 +7,12 @@ import { DatabaseMethods } from "./modules/database";
 import { join } from "path";
 
 declare global {
-    type ORecord<K extends keyof any, T> = {
-        [KK in K]?: T
+    type FORecord<T> = {
+        [K in keyof T]?: T[K]
     }
 
-    type Primatives<T> = { [Key in keyof T]?: T[Key] extends (String | Number | Boolean) ? Key : never }[keyof T]
+    // type Primatives<T> = { [Key in keyof T]?: T[Key] extends (String | Number | Boolean) ? Key : never }[keyof T]
+    type Primatives<T> = { [Key in keyof T]?: Key }[keyof T]
 }
 
 const dbUsername = process.env["DB_USERNAME"];
@@ -35,6 +36,7 @@ export class Main {
             dbPassword,
             dbPort,
             dbDatabase);
+
 
         this.database.onConnection = () => {
             this.routesModule = new Routes(this);

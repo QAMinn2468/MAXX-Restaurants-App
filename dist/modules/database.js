@@ -107,6 +107,7 @@ var DatabaseMethods;
             var _this = _super.call(this, db) || this;
             _this.keyList = [
                 "userID",
+                "displayName",
                 "username",
                 "password",
             ];
@@ -130,7 +131,8 @@ var DatabaseMethods;
         User.prototype.create = function () {
             var doc = new this.model({
                 userID: this.userID,
-                username: this.username,
+                displayName: this.username,
+                username: this.username.toLowerCase(),
                 password: this.password,
             });
             this.document = doc;

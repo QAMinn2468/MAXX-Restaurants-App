@@ -119,10 +119,12 @@ export namespace DatabaseMethods {
          * PK
          */
         userID: string;
+        displayName: string;
         username: string;
         password: string;
         keyList = [
             "userID",
+            "displayName",
             "username",
             "password",
         ];
@@ -138,7 +140,7 @@ export namespace DatabaseMethods {
             this.addDoc(doc);
         }
 
-        find(options: ORecord<keyof User, any>) {
+        find(options: FORecord<User>) {
             return new Promise<User>((resolve, reject) => {
                 this.model.findOne(options, (err, doc) => {
                     if(err) return reject(err);
@@ -153,7 +155,8 @@ export namespace DatabaseMethods {
         create() {
             const doc = new this.model({
                 userID: this.userID,
-                username: this.username,
+                displayName: this.username,
+                username: this.username.toLowerCase(),
                 password: this.password,
             });
 
@@ -188,7 +191,7 @@ export namespace DatabaseMethods {
             this.addDoc(doc);
         }
 
-        find(options: ORecord<keyof Session, any>) {
+        find(options: FORecord<Session>) {
             return new Promise<Session>((resolve, reject) => {
                 this.model.findOne(options, (err, doc) => {
                     if(err) return reject(err);
@@ -270,7 +273,7 @@ export namespace DatabaseMethods {
             this.addDoc(doc);
         }
 
-        find(options: ORecord<keyof Post, any>) {
+        find(options: FORecord<Post>) {
             return new Promise<Post>((resolve, reject) => {
                 this.model.findOne(options, (err, doc) => {
                     if(err) return reject(err);
@@ -341,7 +344,7 @@ export namespace DatabaseMethods {
             this.addDoc(doc);
         }
 
-        find(options: ORecord<keyof Restaurant, any>) {
+        find(options: FORecord<Restaurant>) {
             return new Promise<Restaurant>((resolve, reject) => {
                 this.model.findOne(options, (err, doc) => {
                     if(err) return reject(err);
@@ -401,7 +404,7 @@ export namespace DatabaseMethods {
             this.addDoc(doc);
         }
 
-        find(options: ORecord<keyof RestaurantRating, any>) {
+        find(options: FORecord<RestaurantRating>) {
             return new Promise<RestaurantRating>((resolve, reject) => {
                 this.model.findOne(options, (err, doc) => {
                     if(err) return reject(err);
