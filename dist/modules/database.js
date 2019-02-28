@@ -33,32 +33,32 @@ var DatabaseMethods;
         }
         Database.prototype.makeModels = function () {
             this.userModel = this.connection.model("users", new mongoose_1.Schema({
-                userID: { type: String, required: true },
+                userPK: { type: String, required: true },
                 username: { type: String, required: true },
                 password: { type: String, required: true },
             }, {
                 timestamps: true
             }));
             this.sessionModel = this.connection.model("sessions", new mongoose_1.Schema({
-                sessionID: { type: String, required: true },
-                user: { type: String, required: true },
+                sessionPK: { type: String, required: true },
+                userFK: { type: String, required: true },
             }, {
                 timestamps: true
             }));
             this.postModel = this.connection.model("posts", new mongoose_1.Schema({
-                postID: { type: String, required: true },
+                postPK: { type: String, required: true },
                 title: { type: String, default: "" },
                 content: { type: String, required: true },
-                user: { type: String, required: true },
+                userFK: { type: String, required: true },
                 postType: { type: Number, required: true },
-                restaurant: { type: String, required: true },
-                upvotes: { type: [String], default: [] },
-                downvotes: { type: [String], default: [] },
+                restaurantFK: { type: String, required: true },
+                upvoteFKs: { type: [String], default: [] },
+                downvoteFKs: { type: [String], default: [] },
             }, {
                 timestamps: true
             }));
             this.restaurantModel = this.connection.model("restaurants", new mongoose_1.Schema({
-                restaurantID: { type: String, required: true },
+                restaurantPK: { type: String, required: true },
                 name: { type: String, required: true },
                 description: { type: String, default: "" },
                 street: { type: String, required: true },
@@ -72,8 +72,8 @@ var DatabaseMethods;
             }));
             //--
             this.restaurantRatingModel = this.connection.model("ratings", new mongoose_1.Schema({
-                restaurantRatingID: { type: String, required: true },
-                post: { type: String, required: true },
+                restaurantRatingPK: { type: String, required: true },
+                postFK: { type: String, required: true },
                 rating: { type: Number, default: 0 }
             }, {
                 timestamps: true
@@ -86,6 +86,11 @@ var DatabaseMethods;
         function Facilitator(db) {
             this.document = null;
         }
+        Object.defineProperty(Facilitator.prototype, "hasDoc", {
+            get: function () { return !!this.document; },
+            enumerable: true,
+            configurable: true
+        });
         Facilitator.prototype.find = function (options) { return null; };
         Facilitator.prototype.create = function () { return null; };
         Facilitator.prototype.addDoc = function (doc) { this.assignData(doc); };
@@ -106,7 +111,7 @@ var DatabaseMethods;
             if (doc === void 0) { doc = null; }
             var _this = _super.call(this, db) || this;
             _this.keyList = [
-                "userID",
+                "userPK",
                 "displayName",
                 "username",
                 "password",
@@ -130,7 +135,7 @@ var DatabaseMethods;
         };
         User.prototype.create = function () {
             var doc = new this.model({
-                userID: this.userID,
+                userPK: this.userPK,
                 displayName: this.username,
                 username: this.username.toLowerCase(),
                 password: this.password,
@@ -147,8 +152,8 @@ var DatabaseMethods;
             if (doc === void 0) { doc = null; }
             var _this = _super.call(this, db) || this;
             _this.keyList = [
-                "sessionID",
-                "user",
+                "sessionPK",
+                "userFK",
             ];
             _this.model = db.sessionModel;
             _this.document = doc;
@@ -169,8 +174,8 @@ var DatabaseMethods;
         };
         Session.prototype.create = function () {
             var doc = new this.model({
-                sessionID: this.sessionID,
-                user: this.user,
+                sessionPK: this.sessionPK,
+                userFK: this.userFK,
             });
             this.document = doc;
             return doc;
@@ -184,20 +189,20 @@ var DatabaseMethods;
             if (doc === void 0) { doc = null; }
             var _this = _super.call(this, db) || this;
             _this.keyList = [
-                "postID",
+                "postPK",
                 "title",
                 "content",
-                "user",
+                "userFK",
                 "postType",
-                "restaurant",
-                "upvotes",
-                "downvotes",
+                "restaurantFK",
+                "upvoteFKs",
+                "downvoteFKs",
             ];
             _this.document = doc;
             _this.model = db.postModel;
             _this.title = "";
-            _this.upvotes = [];
-            _this.downvotes = [];
+            _this.upvoteFKs = [];
+            _this.downvoteFKs = [];
             _this.addDoc(doc);
             return _this;
         }
@@ -215,14 +220,14 @@ var DatabaseMethods;
         };
         Post.prototype.create = function () {
             var doc = new this.model({
-                postID: this.postID,
+                postPK: this.postPK,
                 title: this.title,
                 content: this.content,
-                user: this.user,
+                userFK: this.userFK,
                 postType: this.postType,
-                restaurant: this.restaurant,
-                upvotes: this.upvotes,
-                downvotes: this.downvotes,
+                restaurantFK: this.restaurantFK,
+                upvoteFKs: this.upvoteFKs,
+                downvoteFKs: this.downvoteFKs,
             });
             this.document = doc;
             return doc;
@@ -236,7 +241,7 @@ var DatabaseMethods;
             if (doc === void 0) { doc = null; }
             var _this = _super.call(this, db) || this;
             _this.keyList = [
-                "restaurantID",
+                "restaurantPK",
                 "name",
                 "description",
                 "street",
@@ -267,7 +272,7 @@ var DatabaseMethods;
         };
         Restaurant.prototype.create = function () {
             var doc = new this.model({
-                restaurantID: this.restaurantID,
+                restaurantPK: this.restaurantPK,
                 name: this.name,
                 description: this.description,
                 street: this.street,
@@ -289,8 +294,8 @@ var DatabaseMethods;
             if (doc === void 0) { doc = null; }
             var _this = _super.call(this, db) || this;
             _this.keyList = [
-                "restaurantRatingID",
-                "post",
+                "restaurantRatingPK",
+                "postFK",
                 "rating",
             ];
             _this.document = doc;
@@ -312,8 +317,8 @@ var DatabaseMethods;
         };
         RestaurantRating.prototype.create = function () {
             var doc = new this.model({
-                restaurantRatingID: this.restaurantRatingID,
-                post: this.post,
+                restaurantRatingPK: this.restaurantRatingPK,
+                postFK: this.postFK,
                 rating: this.rating,
             });
             this.document = doc;

@@ -36,40 +36,40 @@ export namespace DatabaseMethods {
 
         makeModels() {
             this.userModel = this.connection.model("users", new Schema({
-                userID: { type: String, required: true },
+                userPK: { type: String, required: true },
                 username: { type: String, required: true },
                 password: { type: String, required: true },
-            } as Record<keyof User, any>, {
+            } as ORecord<User, any>, {
                 timestamps: true
             }));
 
             this.sessionModel = this.connection.model("sessions",
                 new Schema({
-                    sessionID: { type: String, required: true },
-                    user: { type: String, required: true },
-                } as Record<keyof Session, any>, {
+                    sessionPK: { type: String, required: true },
+                    userFK: { type: String, required: true },
+                } as ORecord<Session, any>, {
                     timestamps: true
                 })
             );
 
             this.postModel = this.connection.model("posts",
                 new Schema({
-                    postID: { type: String, required: true },
+                    postPK: { type: String, required: true },
                     title: { type: String, default: "" },
                     content: { type: String, required: true },
-                    user: { type: String, required: true },
+                    userFK: { type: String, required: true },
                     postType: { type: Number, required: true },
-                    restaurant: { type: String, required: true },
-                    upvotes: { type: [String], default: [] },
-                    downvotes: { type: [String], default: [] },
-                } as Record<keyof Post, any>, {
+                    restaurantFK: { type: String, required: true },
+                    upvoteFKs: { type: [String], default: [] },
+                    downvoteFKs: { type: [String], default: [] },
+                } as ORecord<Post, any>, {
                     timestamps: true
                 })
             );
 
             this.restaurantModel = this.connection.model("restaurants",
                 new Schema({
-                    restaurantID: { type: String, required: true },
+                    restaurantPK: { type: String, required: true },
                     name: { type: String, required: true },
                     description: { type: String, default: "" },
                     street: { type: String, required: true },
@@ -78,7 +78,7 @@ export namespace DatabaseMethods {
                     state: { type: String, required: true },
                     country: { type: String, required: true },
                     zip: { type: String, required: true },
-                } as Record<keyof Restaurant, any>, {
+                } as ORecord<Restaurant, any>, {
                     timestamps: true
                 })
             );
@@ -86,10 +86,10 @@ export namespace DatabaseMethods {
             //--
             this.restaurantRatingModel = this.connection.model("ratings",
                 new Schema({
-                    restaurantRatingID: { type: String, required: true },
-                    post: { type: String, required: true },
+                    restaurantRatingPK: { type: String, required: true },
+                    postFK: { type: String, required: true },
                     rating: { type: Number, default: 0 }
-                } as Record<keyof RestaurantRating, any>, {
+                } as ORecord<RestaurantRating, any>, {
                     timestamps: true
                 })
             );
@@ -102,6 +102,7 @@ export namespace DatabaseMethods {
         db: Database;
         document: Document = null;
         constructor(db: Database) {}
+        get hasDoc(): boolean { return !!this.document; }
         find(options: Record<string, any>): Promise<Facilitator> { return null; }
         create(): Document { return null; }
         addDoc(doc: Document): void { this.assignData(doc); }
@@ -118,12 +119,12 @@ export namespace DatabaseMethods {
         /**
          * PK
          */
-        userID: string;
+        userPK: string;
         displayName: string;
         username: string;
         password: string;
         keyList = [
-            "userID",
+            "userPK",
             "displayName",
             "username",
             "password",
@@ -154,7 +155,7 @@ export namespace DatabaseMethods {
 
         create() {
             const doc = new this.model({
-                userID: this.userID,
+                userPK: this.userPK,
                 displayName: this.username,
                 username: this.username.toLowerCase(),
                 password: this.password,
@@ -170,17 +171,17 @@ export namespace DatabaseMethods {
         /**
          * PK
          */
-        sessionID: string;
+        sessionPK: string;
         /**
          * FK: User.userID
          */
-        user: string;
+        userFK: string;
+        keyList = [
+            "sessionPK",
+            "userFK",
+        ];
 
         model: Model<Document>;
-        keyList = [
-            "sessionID",
-            "user",
-        ];
 
         constructor(db: Database, doc: Document = null) {
             super(db);
@@ -205,8 +206,8 @@ export namespace DatabaseMethods {
 
         create() {
             const doc = new this.model({
-                sessionID: this.sessionID,
-                user: this.user,
+                sessionPK: this.sessionPK,
+                userFK: this.userFK,
             });
 
             this.document = doc;
@@ -219,14 +220,14 @@ export namespace DatabaseMethods {
         /**
          * PK
          */
-        postID: string;
+        postPK: string;
         title: string;
         content: string;
         /**
          *
          * FK: User.userID
          */
-        user: string;
+        userFK: string;
         /**
          * 1 = review
          * 2 = comment
@@ -236,27 +237,27 @@ export namespace DatabaseMethods {
          *
          * FK: Restaurant.restaurantID
          */
-        restaurant: string;
+        restaurantFK: string;
         /**
          * List<FK: User.userID>
          */
-        upvotes: string[];
+        upvoteFKs: string[];
         /**
          * List<FK: User.userID>
          */
-        downvotes: string[];
+        downvoteFKs: string[];
 
         model: Model<Document>;
 
         keyList = [
-            "postID",
+            "postPK",
             "title",
             "content",
-            "user",
+            "userFK",
             "postType",
-            "restaurant",
-            "upvotes",
-            "downvotes",
+            "restaurantFK",
+            "upvoteFKs",
+            "downvoteFKs",
         ];
 
         constructor(db: Database, doc: Document = null) {
@@ -267,8 +268,8 @@ export namespace DatabaseMethods {
             this.model = db.postModel;
 
             this.title = "";
-            this.upvotes = [];
-            this.downvotes = [];
+            this.upvoteFKs = [];
+            this.downvoteFKs = [];
 
             this.addDoc(doc);
         }
@@ -287,14 +288,14 @@ export namespace DatabaseMethods {
 
         create() {
             const doc = new this.model({
-                postID: this.postID,
+                postPK: this.postPK,
                 title: this.title,
                 content: this.content,
-                user: this.user,
+                userFK: this.userFK,
                 postType: this.postType,
-                restaurant: this.restaurant,
-                upvotes: this.upvotes,
-                downvotes: this.downvotes,
+                restaurantFK: this.restaurantFK,
+                upvoteFKs: this.upvoteFKs,
+                downvoteFKs: this.downvoteFKs,
             });
 
             this.document = doc;
@@ -307,7 +308,7 @@ export namespace DatabaseMethods {
         /**
          * PK
          */
-        restaurantID: string;
+        restaurantPK: string;
         name: string;
         description: string;
         street: string;
@@ -320,7 +321,7 @@ export namespace DatabaseMethods {
         model: Model<Document>;
 
         keyList = [
-            "restaurantID",
+            "restaurantPK",
             "name",
             "description",
             "street",
@@ -358,7 +359,7 @@ export namespace DatabaseMethods {
 
         create() {
             const doc = new this.model({
-                restaurantID: this.restaurantID,
+                restaurantPK: this.restaurantPK,
                 name: this.name,
                 description: this.description,
                 street: this.street,
@@ -379,18 +380,18 @@ export namespace DatabaseMethods {
         /**
          * PK
          */
-        restaurantRatingID: string;
+        restaurantRatingPK: string;
         /**
          * FK: Post.postID
          */
-        post: string;
+        postFK: string;
         rating: number;
 
         model: Model<Document>;
 
         keyList = [
-            "restaurantRatingID",
-            "post",
+            "restaurantRatingPK",
+            "postFK",
             "rating",
         ];
 
@@ -418,8 +419,8 @@ export namespace DatabaseMethods {
 
         create() {
             const doc = new this.model({
-                restaurantRatingID: this.restaurantRatingID,
-                post: this.post,
+                restaurantRatingPK: this.restaurantRatingPK,
+                postFK: this.postFK,
                 rating: this.rating,
             });
 

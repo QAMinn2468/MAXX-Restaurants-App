@@ -12,7 +12,7 @@ var Accounts = /** @class */ (function () {
         console.log("creating account", username, password);
         return new Promise(function (resolve, reject) {
             var user = new database_1.DatabaseMethods.User(_this.main.database);
-            user.userID = uuid();
+            user.userPK = uuid();
             if (_this.validateUsername(username)) {
                 user.username = username;
             }
@@ -34,7 +34,7 @@ var Accounts = /** @class */ (function () {
                 });
             }).then(function (canAddAccount) {
                 if (!canAddAccount)
-                    return reject("Cannot create account. Account exists");
+                    return resolve(new database_1.DatabaseMethods.User(_this.main.database, null));
                 bcrypt.genSalt()
                     .then(function (salt) { return bcrypt.hash(password, salt); })
                     .then(function (hash) {
@@ -63,6 +63,8 @@ var Accounts = /** @class */ (function () {
                 username: username
             })
                 .then(function (doc) {
+                if (!doc.hasDoc)
+                    return resolve(doc);
                 console.log("got doc");
                 bcrypt.compare(password, doc.password)
                     .then(function (matches) {

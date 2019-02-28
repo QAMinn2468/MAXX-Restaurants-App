@@ -16,7 +16,7 @@ export class Accounts {
 
         return new Promise<DatabaseMethods.User>((resolve, reject) => {
             const user = new DatabaseMethods.User(this.main.database);
-            user.userID = uuid();
+            user.userPK = uuid();
             if (this.validateUsername(username)) {
                 user.username = username;
             } else {
@@ -36,7 +36,7 @@ export class Accounts {
                     }
                 });
             }).then((canAddAccount) => {
-                if(!canAddAccount) return reject("Cannot create account. Account exists");
+                if (!canAddAccount) return resolve(new DatabaseMethods.User(this.main.database, null));
 
                 bcrypt.genSalt()
                 .then(salt => bcrypt.hash(password, salt))
@@ -70,6 +70,7 @@ export class Accounts {
                 username
             })
             .then(doc => {
+                if (!doc.hasDoc) return resolve(doc);
                 console.log("got doc");
 
                 bcrypt.compare(password, doc.password)

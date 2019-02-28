@@ -11,6 +11,10 @@ declare global {
         [K in keyof T]?: T[K]
     }
 
+    type ORecord<K, T> = {
+        [Kk in keyof K]?: T
+    }
+
     // type Primatives<T> = { [Key in keyof T]?: T[Key] extends (String | Number | Boolean) ? Key : never }[keyof T]
     type Primatives<T> = { [Key in keyof T]?: Key }[keyof T]
 }
