@@ -1,0 +1,79 @@
+body {
+  background-color: whitesmoke;
+  text-align: center;
+}
+
+.nav {
+  display: inline;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  background-color: antiquewhite;
+}
+
+a {
+  display: block;
+  padding: 8px;
+  background-color: lightgrey;
+}
+
+.maxxLogo {
+  width: 20%;
+}
+
+.maxxLogo-small {
+  width: 10%;
+}
+
+main {
+  display: flex;
+  /* Flex is set up here. Think twice before editing. */
+  flex-flow: row wrap;
+  justify-content: space-between;
+}
+
+div {
+  margin: 10px;
+}
+
+.restaurant {
+  margin: 10px;
+  min-width: 200px;
+  max-width: 30%;
+  margin: 0 auto;
+  width: 300px;
+  padding: 1em;
+  border: 1px solid #CCC;
+  border-radius: 1em;
+}
+
+.restaurant:hover {
+  margin: 2;
+  width: 350px;
+  padding: 2px;
+  border: 2px solid #AAA;
+  border-radius: 1em;
+}
+
+.phoneNumber:hover {
+  font-size: 2em;
+  font-weight: bolder;
+}
+
+/*------------------------------------------------------------------------------
+
+                             Add a restaurant Page
+--------------------------------------------------------------------------------*/
+form {
+  margin: 0 auto;
+  width: 400px;
+  padding: 1em;
+  border: 1px solid #CCC;
+  border-radius: 1em;
+}
+
+button {
+  margin: 20px;
+}
+
+/*# sourceMappingURL=style.css.map */
