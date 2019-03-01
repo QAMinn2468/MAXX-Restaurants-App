@@ -1,6 +1,7 @@
 import * as uuid from "uuid/v1";
 import { Main } from "../main";
 import { DatabaseMethods } from "./database";
+import { Document } from "mongoose";
 
 export class Sessions {
     main: Main;
@@ -15,22 +16,41 @@ export class Sessions {
         const session = new DatabaseMethods.Session(this.main.database);
         session.userFK = userFK;
 
-        const sessionPK = uuid();
-        session.sessionPK = sessionPK;
-        const expirationDate = new Date();
-        expirationDate.setDate(expirationDate.getDate() + 1)
-        session.expirationDate = expirationDate;
-
         return new Promise<DatabaseMethods.Session>((resolve, reject) => {
-            session.create().save()
-                .then(savedDoc => {
-                    console.log("session doc created", savedDoc);
-                    resolve(session);
-                })
-                .catch(e => {
-                    reject(e);
-                    console.error(e);
-                });
+            session.find({
+                userFK
+            }).then(session => {
+                const sessionPK = uuid();
+                session.sessionPK = sessionPK;
+
+                const expirationDate = new Date();
+                expirationDate.setDate(expirationDate.getDate() + 1)
+                session.expirationDate = expirationDate;
+
+                if (session.hasDoc) {
+                    session.updateDoc();
+                    session.document.update(Object.assign(session.document, { updatedAt: new Date() }), (err, raw) => {
+                        if(err) {
+                            console.error(err);
+                            reject(err);
+                            return;
+                        }
+
+                        console.log("session doc updated", raw);
+                        resolve(session);
+                    });
+                } else {
+                    session.create().save()
+                        .then(savedDoc => {
+                            console.log("session doc created", savedDoc);
+                            resolve(session);
+                        })
+                        .catch(e => {
+                            console.error(e);
+                            reject(e);
+                        });
+                }
+            }).catch(e => console.error(e));
         });
     }
 }

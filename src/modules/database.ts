@@ -39,7 +39,7 @@ export namespace DatabaseMethods {
                 userPK: { type: String, required: true },
                 username: { type: String, required: true },
                 password: { type: String, required: true },
-            } as ORecord<User, any>, {
+            } as ORecord<User, ValueOf<Mongoose.SchemaDefinition>>, {
                 timestamps: true
             }));
 
@@ -48,7 +48,7 @@ export namespace DatabaseMethods {
                     sessionPK: { type: String, required: true },
                     expirationDate: { type: Date, required: true },
                     userFK: { type: String, required: true },
-                } as ORecord<Session, any>, {
+                } as ORecord<Session, ValueOf<Mongoose.SchemaDefinition>>, {
                     timestamps: true
                 })
             );
@@ -63,7 +63,7 @@ export namespace DatabaseMethods {
                     restaurantFK: { type: String, required: true },
                     upvoteFKs: { type: [String], default: [] },
                     downvoteFKs: { type: [String], default: [] },
-                } as ORecord<Post, any>, {
+                } as ORecord<Post, ValueOf<Mongoose.SchemaDefinition>>, {
                     timestamps: true
                 })
             );
@@ -79,7 +79,7 @@ export namespace DatabaseMethods {
                     state: { type: String, required: true },
                     country: { type: String, required: true },
                     zip: { type: String, required: true },
-                } as ORecord<Restaurant, any>, {
+                } as ORecord<Restaurant, ValueOf<Mongoose.SchemaDefinition>>, {
                     timestamps: true
                 })
             );
@@ -90,7 +90,7 @@ export namespace DatabaseMethods {
                     restaurantRatingPK: { type: String, required: true },
                     postFK: { type: String, required: true },
                     rating: { type: Number, default: 0 }
-                } as ORecord<RestaurantRating, any>, {
+                } as ORecord<RestaurantRating, ValueOf<Mongoose.SchemaDefinition>>, {
                     timestamps: true
                 })
             );
@@ -106,12 +106,20 @@ export namespace DatabaseMethods {
         get hasDoc(): boolean { return !!this.document; }
         find(options: Record<string, any>): Promise<Facilitator> { return null; }
         create(): Document { return null; }
-        addDoc(doc: Document): void { this.assignData(doc); }
-        private assignData(doc: Document) {
+        updateDoc(): void { this.assignDataClassToDoc(); }
+        addDoc(doc: Document): void { this.assignDataDocToClass(doc); }
+        private assignDataDocToClass(doc: Document) {
             if (!doc) return;
 
             this.keyList.map(k => {
                 this[k] = (<any>doc)[k]
+            });
+        }
+        private assignDataClassToDoc() {
+            if (!this.document) return;
+
+            this.keyList.map(k => {
+                (<any>this.document)[k] = this[k]
             });
         }
     }

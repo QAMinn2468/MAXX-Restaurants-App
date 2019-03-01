@@ -94,13 +94,22 @@ var DatabaseMethods;
         });
         Facilitator.prototype.find = function (options) { return null; };
         Facilitator.prototype.create = function () { return null; };
-        Facilitator.prototype.addDoc = function (doc) { this.assignData(doc); };
-        Facilitator.prototype.assignData = function (doc) {
+        Facilitator.prototype.updateDoc = function () { this.assignDataClassToDoc(); };
+        Facilitator.prototype.addDoc = function (doc) { this.assignDataDocToClass(doc); };
+        Facilitator.prototype.assignDataDocToClass = function (doc) {
             var _this = this;
             if (!doc)
                 return;
             this.keyList.map(function (k) {
                 _this[k] = doc[k];
+            });
+        };
+        Facilitator.prototype.assignDataClassToDoc = function () {
+            var _this = this;
+            if (!this.document)
+                return;
+            this.keyList.map(function (k) {
+                _this.document[k] = _this[k];
             });
         };
         return Facilitator;

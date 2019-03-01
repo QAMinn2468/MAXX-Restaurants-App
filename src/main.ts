@@ -15,6 +15,8 @@ declare global {
         [Kk in keyof K]?: T
     }
 
+    type ValueOf<T> = T[keyof T]
+
     // type Primatives<T> = { [Key in keyof T]?: T[Key] extends (String | Number | Boolean) ? Key : never }[keyof T]
     type Primatives<T> = { [Key in keyof T]?: Key }[keyof T]
 }
