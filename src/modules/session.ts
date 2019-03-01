@@ -17,6 +17,9 @@ export class Sessions {
 
         const sessionPK = uuid();
         session.sessionPK = sessionPK;
+        const expirationDate = new Date();
+        expirationDate.setDate(expirationDate.getDate() + 1)
+        session.expirationDate = expirationDate;
 
         return new Promise<DatabaseMethods.Session>((resolve, reject) => {
             session.create().save()

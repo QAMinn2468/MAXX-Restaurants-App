@@ -41,6 +41,7 @@ var DatabaseMethods;
             }));
             this.sessionModel = this.connection.model("sessions", new mongoose_1.Schema({
                 sessionPK: { type: String, required: true },
+                expirationDate: { type: Date, required: true },
                 userFK: { type: String, required: true },
             }, {
                 timestamps: true
@@ -153,6 +154,7 @@ var DatabaseMethods;
             var _this = _super.call(this, db) || this;
             _this.keyList = [
                 "sessionPK",
+                "expirationDate",
                 "userFK",
             ];
             _this.model = db.sessionModel;
@@ -175,6 +177,7 @@ var DatabaseMethods;
         Session.prototype.create = function () {
             var doc = new this.model({
                 sessionPK: this.sessionPK,
+                expirationDate: this.expirationDate,
                 userFK: this.userFK,
             });
             this.document = doc;

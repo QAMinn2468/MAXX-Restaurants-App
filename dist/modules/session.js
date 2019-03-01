@@ -12,6 +12,9 @@ var Sessions = /** @class */ (function () {
         session.userFK = userFK;
         var sessionPK = uuid();
         session.sessionPK = sessionPK;
+        var expirationDate = new Date();
+        expirationDate.setDate(expirationDate.getDate() + 1);
+        session.expirationDate = expirationDate;
         return new Promise(function (resolve, reject) {
             session.create().save()
                 .then(function (savedDoc) {

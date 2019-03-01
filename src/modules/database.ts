@@ -46,6 +46,7 @@ export namespace DatabaseMethods {
             this.sessionModel = this.connection.model("sessions",
                 new Schema({
                     sessionPK: { type: String, required: true },
+                    expirationDate: { type: Date, required: true },
                     userFK: { type: String, required: true },
                 } as ORecord<Session, any>, {
                     timestamps: true
@@ -172,12 +173,14 @@ export namespace DatabaseMethods {
          * PK
          */
         sessionPK: string;
+        expirationDate: Date;
         /**
          * FK: User.userID
          */
         userFK: string;
         keyList = [
             "sessionPK",
+            "expirationDate",
             "userFK",
         ];
 
@@ -207,6 +210,7 @@ export namespace DatabaseMethods {
         create() {
             const doc = new this.model({
                 sessionPK: this.sessionPK,
+                expirationDate: this.expirationDate,
                 userFK: this.userFK,
             });
 

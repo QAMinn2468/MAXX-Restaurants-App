@@ -2,6 +2,7 @@ import * as express from "express";
 import { Main } from "../main";
 import { Accounts } from "./accounts";
 import { Sessions } from "./session";
+import { Time } from "./time";
 
 export class API {
     app = express();
@@ -34,7 +35,9 @@ export class API {
             if(user.hasDoc) {
                 this.sessions.newSession(user.userPK)
                     .then(session => {
-                        res.cookie("sesh", session.sessionPK);
+                        res.cookie("timeSession", session.sessionPK, {
+                            expires: false, // session.expirationDate
+                        });
                         res.send(`ESKETIT/api/login<br>Logged In<br><br>${JSON.stringify(user)}<br>${JSON.stringify(session)}`);
                         console.log("login successful");
                     })

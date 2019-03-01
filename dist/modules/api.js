@@ -31,7 +31,9 @@ var API = /** @class */ (function () {
             if (user.hasDoc) {
                 _this.sessions.newSession(user.userPK)
                     .then(function (session) {
-                    res.cookie("sesh", session.sessionPK);
+                    res.cookie("timeSession", session.sessionPK, {
+                        expires: false,
+                    });
                     res.send("ESKETIT/api/login<br>Logged In<br><br>" + JSON.stringify(user) + "<br>" + JSON.stringify(session));
                     console.log("login successful");
                 })
