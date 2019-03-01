@@ -11,7 +11,7 @@ export class Accounts {
         this.main = main;
     }
 
-    createAccount(username: string, password: string): Promise<DatabaseMethods.User> {
+    createAccount({username, password}: {username: string, password: string}): Promise<DatabaseMethods.User> {
         console.log("creating account", username, password);
 
         return new Promise<DatabaseMethods.User>((resolve, reject) => {
@@ -60,7 +60,7 @@ export class Accounts {
         });
     }
 
-    authenticateAccount(username: string, password: string): Promise<DatabaseMethods.User> {
+    authenticateAccount({username, password}: {username: string, password: string}): Promise<DatabaseMethods.User> {
         console.log("verifying account:", username, password);
 
         const user = new DatabaseMethods.User(this.main.database);

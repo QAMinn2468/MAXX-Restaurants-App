@@ -9,7 +9,25 @@ export class Restaurants {
         this.main = main;
     }
 
-    newRestaurant() {
+    createRestaurant(data: TORecord<DatabaseMethods.Restaurant>) {
+        const rest = new DatabaseMethods.Restaurant(this.main.database);
+        rest.restaurantPK = uuid();
+        rest.name = data.name || "";
+        rest.description = data.description || "";
+        rest.street = data.street || "";
+        rest.apt = data.apt || "";
+        rest.city = data.city || "";
+        rest.state = data.state || "";
+        rest.country = data.country || "";
+        rest.zip = data.zip || "";
+
+        return new Promise<DatabaseMethods.Restaurant>((resolve, reject) => {
+            rest.create().save((err, doc) => {
+                if (err) return reject(err);
+
+                resolve(rest);
+            });
+        });
     }
 }
 

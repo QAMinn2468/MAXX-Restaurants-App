@@ -7,14 +7,24 @@ import { DatabaseMethods } from "./modules/database";
 import { join } from "path";
 
 declare global {
-    type FORecord<T> = {
+    /**
+     * Record with optional parameters
+     * Uses types of T
+     */
+    type TORecord<T> = {
         [K in keyof T]?: T[K]
     }
 
+    /**
+     * Record with optional parameters
+     */
     type ORecord<K, T> = {
         [Kk in keyof K]?: T
     }
 
+    /**
+     * Gets the data types of T
+     */
     type ValueOf<T> = T[keyof T]
 
     // type Primatives<T> = { [Key in keyof T]?: T[Key] extends (String | Number | Boolean) ? Key : never }[keyof T]

@@ -150,7 +150,7 @@ export namespace DatabaseMethods {
             this.addDoc(doc);
         }
 
-        find(options: FORecord<User>) {
+        find(options: TORecord<User>) {
             return new Promise<User>((resolve, reject) => {
                 this.model.findOne(options, (err, doc) => {
                     if(err) return reject(err);
@@ -203,7 +203,7 @@ export namespace DatabaseMethods {
             this.addDoc(doc);
         }
 
-        find(options: FORecord<Session>) {
+        find(options: TORecord<Session>) {
             return new Promise<Session>((resolve, reject) => {
                 this.model.findOne(options, (err, doc) => {
                     if(err) return reject(err);
@@ -286,7 +286,7 @@ export namespace DatabaseMethods {
             this.addDoc(doc);
         }
 
-        find(options: FORecord<Post>) {
+        find(options: TORecord<Post>) {
             return new Promise<Post>((resolve, reject) => {
                 this.model.findOne(options, (err, doc) => {
                     if(err) return reject(err);
@@ -357,7 +357,7 @@ export namespace DatabaseMethods {
             this.addDoc(doc);
         }
 
-        find(options: FORecord<Restaurant>) {
+        find(options: TORecord<Restaurant>) {
             return new Promise<Restaurant>((resolve, reject) => {
                 this.model.findOne(options, (err, doc) => {
                     if(err) return reject(err);
@@ -417,7 +417,7 @@ export namespace DatabaseMethods {
             this.addDoc(doc);
         }
 
-        find(options: FORecord<RestaurantRating>) {
+        find(options: TORecord<RestaurantRating>) {
             return new Promise<RestaurantRating>((resolve, reject) => {
                 this.model.findOne(options, (err, doc) => {
                     if(err) return reject(err);

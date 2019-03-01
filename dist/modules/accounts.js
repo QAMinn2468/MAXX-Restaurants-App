@@ -7,8 +7,9 @@ var Accounts = /** @class */ (function () {
     function Accounts(main) {
         this.main = main;
     }
-    Accounts.prototype.createAccount = function (username, password) {
+    Accounts.prototype.createAccount = function (_a) {
         var _this = this;
+        var username = _a.username, password = _a.password;
         console.log("creating account", username, password);
         return new Promise(function (resolve, reject) {
             var user = new database_1.DatabaseMethods.User(_this.main.database);
@@ -55,7 +56,8 @@ var Accounts = /** @class */ (function () {
             }).catch(function (e) { return console.log(e); });
         });
     };
-    Accounts.prototype.authenticateAccount = function (username, password) {
+    Accounts.prototype.authenticateAccount = function (_a) {
+        var username = _a.username, password = _a.password;
         console.log("verifying account:", username, password);
         var user = new database_1.DatabaseMethods.User(this.main.database);
         return new Promise(function (resolve, reject) {
