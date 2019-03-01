@@ -24,6 +24,22 @@
                 <button>Submit</button>
             </form>
         </div>
+        <div>
+            <h2>Add Restaurant</h2>
+            <form action="/api/add-restaurant" method="post">
+                <input type="text" name="name" value="name">
+                <input type="text" name="description" value="description">
+                <input type="text" name="street" value="801 Boush st.">
+                <input type="text" name="apt" value="204">
+                <input type="text" name="city" value="Norfolk">
+                <input type="text" name="state" value="VA">
+                <select name="country" id="">
+                    <option value="usa">United States</option>
+                </select>
+                <input type="text" name="zip" value="12345">
+                <button>Submit</button>
+            </form>
+        </div>
     </div>
     <script src="/js/bundle.dev.js"></script>
 </body>

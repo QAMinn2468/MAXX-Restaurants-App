@@ -10,6 +10,8 @@ export class Restaurants {
     }
 
     createRestaurant(data: TORecord<DatabaseMethods.Restaurant>) {
+        console.log("Creating restaurant");
+
         const rest = new DatabaseMethods.Restaurant(this.main.database);
         rest.restaurantPK = uuid();
         rest.name = data.name || "";

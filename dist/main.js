@@ -7,6 +7,15 @@ var routes_1 = require("./modules/routes");
 var api_1 = require("./modules/api");
 var database_1 = require("./modules/database");
 var path_1 = require("path");
+var Results = /** @class */ (function () {
+    function Results(success, content, message) {
+        this.success = success;
+        this.content = content;
+        this.message = message;
+    }
+    return Results;
+}());
+exports.Results = Results;
 var dbUsername = process.env["DB_USERNAME"];
 var dbPassword = process.env["DB_PASSWORD"];
 var dbPort = process.env["DB_PORT"];

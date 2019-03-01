@@ -7,6 +7,7 @@ var Restaurants = /** @class */ (function () {
         this.main = main;
     }
     Restaurants.prototype.createRestaurant = function (data) {
+        console.log("Creating restaurant");
         var rest = new database_1.DatabaseMethods.Restaurant(this.main.database);
         rest.restaurantPK = uuid();
         rest.name = data.name || "";

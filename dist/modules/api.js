@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var express = require("express");
+var main_1 = require("../main");
 var accounts_1 = require("./accounts");
 var session_1 = require("./session");
 var restaurants_1 = require("./restaurants");
@@ -36,7 +37,8 @@ var API = /** @class */ (function () {
                     res.cookie("timeSession", session.sessionPK, {
                         expires: false,
                     });
-                    res.send("ESKETIT/api/login<br>Logged In<br><br>" + JSON.stringify(user) + "<br>" + JSON.stringify(session));
+                    var response = new main_1.Results(true, { user: user, session: session }, null);
+                    res.send("ESKETIT/api/login<br>Logged In<br><br><pre>" + JSON.stringify(response) + "</pre>");
                     console.log("login successful");
                 })
                     .catch(function (e) {
@@ -56,11 +58,13 @@ var API = /** @class */ (function () {
     API.prototype.signupAPI = function (req, res, next) {
         if (next === void 0) { next = null; }
         this.accounts.createAccount(req.body)
-            .then(function (doc) {
-            if (doc.hasDoc) {
-                res.send("ESKETIT/api/signup<br>Signed Up<br><br>" + JSON.stringify(doc));
+            .then(function (user) {
+            if (user.hasDoc) {
+                var response = new main_1.Results(true, user, null);
+                res.send("ESKETIT/api/signup<br>Signed Up<br><br><pre>" + JSON.stringify(response) + "</pre>");
             }
             else {
+                // const response = new Results(false, user, "Could not create account");
                 res.send("ESKETIT/api/signup<br>Could not create account");
             }
         }).catch(function (e) {
@@ -74,10 +78,13 @@ var API = /** @class */ (function () {
             .createRestaurant(req.body)
             .then(function (rest) {
             if (rest.hasDoc) {
-                res.send("ESKETIT/api/add-restaurant<br>Restaurant added<br><br>" + JSON.stringify(rest));
+                console.log("Restaurant added");
+                var response = new main_1.Results(true, rest, null);
+                res.send("ESKETIT/api/add-restaurant<br>Restaurant added<br><br>" + JSON.stringify(response));
             }
             else {
-                res.send("ESKETIT/api/add-restaurant<br>Restaurant not added");
+                var response = new main_1.Results(false, rest, "Restaurant not added");
+                res.send("ESKETIT/api/add-restaurant<br>" + JSON.stringify(response));
             }
         })
             .catch(function (e) {

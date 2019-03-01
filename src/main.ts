@@ -31,6 +31,18 @@ declare global {
     type Primatives<T> = { [Key in keyof T]?: Key }[keyof T]
 }
 
+export class Results {
+    success: boolean;
+    content: any;
+    message: string;
+
+    constructor(success: boolean, content: any, message: string) {
+        this.success = success;
+        this.content = content;
+        this.message = message;
+    }
+}
+
 const dbUsername = process.env["DB_USERNAME"];
 const dbPassword = process.env["DB_PASSWORD"];
 const dbPort = process.env["DB_PORT"];

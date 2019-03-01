@@ -1,5 +1,5 @@
 import * as express from "express";
-import { Main } from "../main";
+import { Main, Results } from "../main";
 import { Accounts } from "./accounts";
 import { Sessions } from "./session";
 import { Time } from "./time";
@@ -41,7 +41,8 @@ export class API {
                         res.cookie("timeSession", session.sessionPK, {
                             expires: false, // session.expirationDate
                         });
-                        res.send(`ESKETIT/api/login<br>Logged In<br><br>${JSON.stringify(user)}<br>${JSON.stringify(session)}`);
+                        const response = new Results(true, {user, session}, null);
+                        res.send(`ESKETIT/api/login<br>Logged In<br><br><pre>${JSON.stringify(response)}</pre>`);
                         console.log("login successful");
                     })
                     .catch(e => {
@@ -60,10 +61,12 @@ export class API {
 
     signupAPI(req: express.Request, res: express.Response, next: express.NextFunction = null) {
         this.accounts.createAccount(req.body)
-        .then(doc => {
-                if (doc.hasDoc) {
-                    res.send(`ESKETIT/api/signup<br>Signed Up<br><br>${JSON.stringify(doc)}`);
+        .then(user => {
+                if (user.hasDoc) {
+                    const response = new Results(true, user, null);
+                    res.send(`ESKETIT/api/signup<br>Signed Up<br><br><pre>${JSON.stringify(response)}</pre>`);
                 } else {
+                    // const response = new Results(false, user, "Could not create account");
                     res.send(`ESKETIT/api/signup<br>Could not create account`);
                 }
             }).catch(e => {
@@ -77,9 +80,15 @@ export class API {
             .createRestaurant(req.body)
             .then(rest => {
                 if (rest.hasDoc) {
-                    res.send(`ESKETIT/api/add-restaurant<br>Restaurant added<br><br>${JSON.stringify(rest)}`);
+                    console.log("Restaurant added");
+
+                    const response = new Results(true, rest, null);
+
+                    res.send(`ESKETIT/api/add-restaurant<br>Restaurant added<br><br>${JSON.stringify(response)}`);
                 } else {
-                    res.send(`ESKETIT/api/add-restaurant<br>Restaurant not added`);
+                    const response = new Results(false, rest, "Restaurant not added");
+
+                    res.send(`ESKETIT/api/add-restaurant<br>${JSON.stringify(response)}`);
                 }
             })
             .catch(e => {
