@@ -58,11 +58,12 @@ export namespace DatabaseMethods {
             this.postModel = this.connection.model("posts",
                 new Schema({
                     postPK: { type: String, required: true },
+                    postFK: { type: String, default: "" },
                     title: { type: String, default: "" },
                     content: { type: String, required: true },
                     userFK: { type: String, required: true },
                     postType: { type: Number, required: true },
-                    restaurantFK: { type: String, required: true },
+                    restaurantFK: { type: String, default: "" },
                     upvoteFKs: { type: [String], default: [] },
                     downvoteFKs: { type: [String], default: [] },
                 } as ORecord<Post, ValueOf<Mongoose.SchemaDefinition>>, {
@@ -236,8 +237,9 @@ export namespace DatabaseMethods {
         postPK: string;
         /**
          * FK: Post.postPK
+         * If comment, the post being replied to
          */
-        postFK: string;
+        postFK?: string;
         title?: string;
         content: string;
         /**
@@ -253,6 +255,7 @@ export namespace DatabaseMethods {
         /**
          *
          * FK: Restaurant.restaurantID
+         * Indicates the applicable restaurant if a review
          */
         restaurantFK?: string;
         /**

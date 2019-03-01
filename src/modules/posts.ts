@@ -14,7 +14,6 @@ export class Posts {
 
         const rest = new DatabaseMethods.Post(this.main.database);
         rest.postPK = uuid();
-        rest.postFK = data.postFK;
         rest.content = data.content;
         rest.userFK = data.userFK;
         rest.postType = PostType.REVIEW;
@@ -41,7 +40,6 @@ export class Posts {
 
         const rest = new DatabaseMethods.Post(this.main.database);
         rest.postPK = uuid();
-        rest.postFK = data.postFK;
         rest.content = data.content;
         rest.userFK = data.userFK;
         rest.postType = PostType.COMMENT;
@@ -49,6 +47,9 @@ export class Posts {
         // rest.restaurantFK = data.restaurantFK;
         // rest.upvoteFKs = data.upvoteFKs;
         // rest.downvoteFKs = data.downvoteFKs;
+
+        // this data is needed since we're making a comment
+        rest.postFK = data.postFK;
 
         return new Promise<DatabaseMethods.Post>((resolve, reject) => {
             rest.create().save((err, doc) => {

@@ -48,11 +48,12 @@ var DatabaseMethods;
             }));
             this.postModel = this.connection.model("posts", new mongoose_1.Schema({
                 postPK: { type: String, required: true },
+                postFK: { type: String, default: "" },
                 title: { type: String, default: "" },
                 content: { type: String, required: true },
                 userFK: { type: String, required: true },
                 postType: { type: Number, required: true },
-                restaurantFK: { type: String, required: true },
+                restaurantFK: { type: String, default: "" },
                 upvoteFKs: { type: [String], default: [] },
                 downvoteFKs: { type: [String], default: [] },
             }, {
@@ -71,7 +72,6 @@ var DatabaseMethods;
             }, {
                 timestamps: true
             }));
-            //--
             this.restaurantRatingModel = this.connection.model("ratings", new mongoose_1.Schema({
                 restaurantRatingPK: { type: String, required: true },
                 postFK: { type: String, required: true },
@@ -202,6 +202,7 @@ var DatabaseMethods;
             var _this = _super.call(this, db) || this;
             _this.keyList = [
                 "postPK",
+                "postFK",
                 "title",
                 "content",
                 "userFK",
@@ -233,6 +234,7 @@ var DatabaseMethods;
         Post.prototype.create = function () {
             var doc = new this.model({
                 postPK: this.postPK,
+                postFK: this.postFK,
                 title: this.title,
                 content: this.content,
                 userFK: this.userFK,
