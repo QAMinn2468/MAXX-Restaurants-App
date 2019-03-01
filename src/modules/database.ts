@@ -35,13 +35,15 @@ export namespace DatabaseMethods {
         }
 
         makeModels() {
-            this.userModel = this.connection.model("users", new Schema({
-                userPK: { type: String, required: true },
-                username: { type: String, required: true },
-                password: { type: String, required: true },
-            } as ORecord<User, ValueOf<Mongoose.SchemaDefinition>>, {
-                timestamps: true
-            }));
+            this.userModel = this.connection.model("users",
+                new Schema({
+                    userPK: { type: String, required: true },
+                    username: { type: String, required: true },
+                    password: { type: String, required: true },
+                } as ORecord<User, ValueOf<Mongoose.SchemaDefinition>>, {
+                    timestamps: true
+                })
+            );
 
             this.sessionModel = this.connection.model("sessions",
                 new Schema({
@@ -84,7 +86,6 @@ export namespace DatabaseMethods {
                 })
             );
 
-            //--
             this.restaurantRatingModel = this.connection.model("ratings",
                 new Schema({
                     restaurantRatingPK: { type: String, required: true },
@@ -233,7 +234,11 @@ export namespace DatabaseMethods {
          * PK
          */
         postPK: string;
-        title: string;
+        /**
+         * FK: Post.postPK
+         */
+        postFK: string;
+        title?: string;
         content: string;
         /**
          *
@@ -241,28 +246,29 @@ export namespace DatabaseMethods {
          */
         userFK: string;
         /**
-         * 1 = review
-         * 2 = comment
+         * REVIEW = 1
+         * COMMENT = 2
          */
         postType: PostType;
         /**
          *
          * FK: Restaurant.restaurantID
          */
-        restaurantFK: string;
+        restaurantFK?: string;
         /**
          * List<FK: User.userID>
          */
-        upvoteFKs: string[];
+        upvoteFKs?: string[];
         /**
          * List<FK: User.userID>
          */
-        downvoteFKs: string[];
+        downvoteFKs?: string[];
 
-        model: Model<Document>;
+        private model: Model<Document>;
 
         keyList = [
             "postPK",
+            "postFK",
             "title",
             "content",
             "userFK",
@@ -301,6 +307,7 @@ export namespace DatabaseMethods {
         create() {
             const doc = new this.model({
                 postPK: this.postPK,
+                postFK: this.postFK,
                 title: this.title,
                 content: this.content,
                 userFK: this.userFK,
@@ -322,9 +329,9 @@ export namespace DatabaseMethods {
          */
         restaurantPK: string;
         name: string;
-        description: string;
+        description?: string;
         street: string;
-        apt: string;
+        apt?: string;
         city: string;
         state: string;
         country: string;
@@ -397,7 +404,7 @@ export namespace DatabaseMethods {
          * FK: Post.postID
          */
         postFK: string;
-        rating: number;
+        rating?: number;
 
         model: Model<Document>;
 

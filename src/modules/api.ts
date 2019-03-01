@@ -4,6 +4,7 @@ import { Accounts } from "./accounts";
 import { Sessions } from "./session";
 import { Time } from "./time";
 import { Restaurants } from "./restaurants";
+import { Posts } from "./posts";
 
 export class API {
     app = express();
@@ -12,6 +13,7 @@ export class API {
     accounts: Accounts;
     sessions: Sessions;
     restaurants: Restaurants;
+    posts: Posts;
 
     constructor(main: Main) {
         this.createRoutes();
@@ -19,6 +21,7 @@ export class API {
         this.accounts = new Accounts(main);
         this.sessions = new Sessions(main);
         this.restaurants = new Restaurants(main);
+        this.posts = new Posts(main);
     }
 
     get routes() {
@@ -29,6 +32,8 @@ export class API {
         this.app.post("/login", this.loginAPI.bind(this));
         this.app.post("/signup", this.signupAPI.bind(this));
         this.app.post("/add-restaurant", this.addRestaurantAPI.bind(this));
+        this.app.post("/add-review", this.addReviewAPI.bind(this));
+        this.app.post("/add-comment", this.addCommentAPI.bind(this));
     }
 
     loginAPI(req: express.Request, res: express.Response, next: express.NextFunction = null) {
@@ -93,6 +98,50 @@ export class API {
             })
             .catch(e => {
                 res.send(`ESKETIT/api/add-restaurant<br>Big Error`);
+                console.error(e);
+            });
+    }
+
+    addReviewAPI(req: express.Request, res: express.Response, next: express.NextFunction = null) {
+        this.posts
+            .createReview(req.body)
+            .then(rest => {
+                if (rest.hasDoc) {
+                    console.log("Review added");
+
+                    const response = new Results(true, rest, null);
+
+                    res.send(`ESKETIT/api/add-review<br>Review added<br><br>${JSON.stringify(response)}`);
+                } else {
+                    const response = new Results(false, rest, "Review not added");
+
+                    res.send(`ESKETIT/api/add-review<br>${JSON.stringify(response)}`);
+                }
+            })
+            .catch(e => {
+                res.send(`ESKETIT/api/add-review<br>Big Error`);
+                console.error(e);
+            });
+    }
+
+    addCommentAPI(req: express.Request, res: express.Response, next: express.NextFunction = null) {
+        this.posts
+            .createComment(req.body)
+            .then(rest => {
+                if (rest.hasDoc) {
+                    console.log("Comment added");
+
+                    const response = new Results(true, rest, null);
+
+                    res.send(`ESKETIT/api/add-comment<br>Comment added<br><br>${JSON.stringify(response)}`);
+                } else {
+                    const response = new Results(false, rest, "Comment not added");
+
+                    res.send(`ESKETIT/api/add-comment<br>${JSON.stringify(response)}`);
+                }
+            })
+            .catch(e => {
+                res.send(`ESKETIT/api/add-comment<br>Big Error`);
                 console.error(e);
             });
     }
