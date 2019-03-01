@@ -5,7 +5,7 @@
   "main": "build.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "install-build-deps": "npm install -g browserify watchify sass typescript uglifyjs",
+    "install-build-deps": "npm install -g browserify watchify sass typescript uglify-js",
     "build": "browserify dist/public/js/index.js | uglifyjs -c -m > dist/public/js/bundle.prod.js"
   },
   "author": "",
