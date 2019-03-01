@@ -24,6 +24,8 @@ export class Routes {
         this.app.get("/reviews/:id", this.reviewView);
         this.app.get("/login", this.loginView);
         this.app.get("/signup", this.signupView);
+        // testbench
+        this.app.get("/testbench", this.testBenchView);
     }
 
     indexView(req: express.Request, res: express.Response, next: express.NextFunction = null) {
@@ -52,5 +54,10 @@ export class Routes {
 
     signupView(req: express.Request, res: express.Response, next: express.NextFunction = null) {
         res.send(`ESKETIT/signup`);
+    }
+
+    // testbench
+    testBenchView(req: express.Request, res: express.Response, next: express.NextFunction = null) {
+        res.sendFile(join(__dirname, "../views/testbench.html"));
     }
 }

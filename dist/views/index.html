@@ -1,30 +1,109 @@
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+  <head>
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
-    <div id="app">
-        <div>
-            <h2>Sign Up</h2>
-            <form action="/api/signup" method="post">
-                <input type="text" name="username" value="username">
-                <input type="password" name="password" value="password">
-                <input type="password" name="password-confirm" value="password">
-                <button>Submit</button>
-            </form>
+    <meta name="author" content="Kim McCaffrey, Shariff Rudolph, Darryl Dixon">
+    <link rel="shortcut icon" href="/image/20181113_135231_2.jpg">
+    <title>Restaurants to the MAXX!</title>
+    <link rel="stylesheet" href="/css/style.css">
+
+  </head>
+  <body>
+    <nav>
+      <ul class="nav">
+        <!-- <li><a href="SEARCH_LINK">Search</a></li>                                        Consider adding this functionality later.-->
+        <li><a href="/add.html">Add a Restaurant</a></li>
+      </ul>
+    </nav>
+    <br>
+    <h1>Restaurants to the MAXX!</h1>
+    <img src="image\20181113_135231_2.jpg" class="maxxLogo" alt="MAXX Potential Logo">
+    <h2>Norfolk area restaurants recommended by MAXX employees.</h2>
+    <main>
+      <div class="restaurant Istanbul">
+        <h2>Istanbul</h2>
+        <h4>Gyro & Kebab</h4>
+        <p class="phoneNumber">757-314-1122</p> <p>
+          <br>
+          723 Monticello Ave, Norfolk, VA 23510
+          <br>
+        * Dine in
+        * Carry out
+          <br>
+        Accepts: MC & V, Discover
+          <br>
+        Hours: M-Thurs 11 am - 7 pm
+               Fri-Sat 11 am - 8 pm
+               Closed Sunday
+        </p>
         </div>
-        <div>
-            <h2>Login</h2>
-            <form action="/api/login" method="post">
-                <input type="text" name="username" value="username">
-                <input type="password" name="password" value="password">
-                <button>Submit</button>
-            </form>
-        </div>
-    </div>
-    <script src="/js/bundle.dev.js"></script>
-</body>
+        <div class="restaurant Sanctuary">
+          <h2>Sanctuary</h2>
+          <h4>Bar & Tacos</h4>
+          <p class="phoneNumber">757-583-8755</p> <p>
+            <br>
+            109 Addison Street, Norfolk, VA 23510
+            <br>
+          * Dine in
+          * Carry out
+            <br>
+          Accepts:
+            <br>
+          Hours: Closed Monday
+          Tues-Thurs 11 am - 10 pm
+          Friday     11 am - Midnight
+          Saturday   11 am - Midnight
+
+          Brunch Offered:
+          Saturday & Sunday  11 am - 4 pm
+          <br>
+          <a href="https://www.hannahbranding.com/sanctuary/taco-menus/" target="_blank">Menu</a>
+                  </p>
+          </div>
+          <div class="restaurant Golden-Fortune">
+            <h2>Golden Fortune</h2>
+            <h4>Chinese</h4>
+            <p class="phoneNumber">757-623-2828</p> <p>
+              <br>
+              1511, 226 W Olney Rd, Norfolk, VA 23510
+              <br>
+            * Dine in
+            * Carry out
+            * Delivery
+            * Catering
+              <br>
+            Accepts: MC/VISA, AMEX
+            $10 minimum for delivery or credit card
+              <br>
+            Hours: Closed Sunday<br>
+            Mon-Sat 11 am -9:30 pm
+            <br>
+            <a href="http://goldenfortunenorfolk.com/menu/" target="_blank">Menu</a>
+                    </p>
+            </div>
+            <div class="restaurant Chick-fil-a">
+              <h2>Chick-Fil-A</h2>
+              <h4>Fast Chicken</h4>
+              <p class="phoneNumber">757-446-8006</p> <p>
+                <br>
+                1600 Monticello Ave, Norfolk, VA 23510
+                <br>
+              * Dine in
+              * Carry out
+                <br>
+              Accepts:
+                <br>
+
+ Sunday	Closed
+ Mon - Sat	6:30AM–10PM
+                <br>
+                <a href="https://www.chick-fil-a.com/" target="_blank">Menu</a>
+                       </p>
+              </div>
+
+      </main>
+
+
+  </body>
 </html>

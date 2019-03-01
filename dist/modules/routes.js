@@ -23,6 +23,8 @@ var Routes = /** @class */ (function () {
         this.app.get("/reviews/:id", this.reviewView);
         this.app.get("/login", this.loginView);
         this.app.get("/signup", this.signupView);
+        // testbench
+        this.app.get("/testbench", this.testBenchView);
     };
     Routes.prototype.indexView = function (req, res, next) {
         if (next === void 0) { next = null; }
@@ -51,6 +53,11 @@ var Routes = /** @class */ (function () {
     Routes.prototype.signupView = function (req, res, next) {
         if (next === void 0) { next = null; }
         res.send("ESKETIT/signup");
+    };
+    // testbench
+    Routes.prototype.testBenchView = function (req, res, next) {
+        if (next === void 0) { next = null; }
+        res.sendFile(path_1.join(__dirname, "../views/testbench.html"));
     };
     return Routes;
 }());
