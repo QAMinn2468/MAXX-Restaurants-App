@@ -9,6 +9,7 @@ var Routes = /** @class */ (function () {
     // posts: Posts;
     function Routes(main) {
         this.app = express();
+        this.app.set("views", path_1.join(__dirname, "../views"));
         this.createRoutes();
         this.main = main;
         // this.accounts = new Accounts(main);
@@ -37,7 +38,7 @@ var Routes = /** @class */ (function () {
     };
     Routes.prototype.indexView = function (req, res, next) {
         if (next === void 0) { next = null; }
-        res.sendFile(path_1.join(__dirname, "../views/index.html"));
+        res.render(path_1.join(__dirname, "../views/index.html"));
     };
     Routes.prototype.restaurantsView = function (req, res, next) {
         if (next === void 0) { next = null; }
@@ -66,12 +67,13 @@ var Routes = /** @class */ (function () {
     // testbench
     Routes.prototype.testBenchView = function (req, res, next) {
         if (next === void 0) { next = null; }
-        res.sendFile(path_1.join(__dirname, "../views/testbench.html"));
+        res.render("testbench-body");
+        // res.sendFile(join(__dirname, "../views/testbench.html"));
     };
     Routes.prototype.test = function (req, res, next) {
         if (next === void 0) { next = null; }
         res.sendFile(path_1.join(__dirname, "../views/testbench.html"));
-        new database_1.DatabaseMethods.Post(this.main.database)
+        new database_1.DatabaseMethods.RestaurantRating(this.main.database)
             .joinAll()
             .then(function (d) {
             console.log(d);

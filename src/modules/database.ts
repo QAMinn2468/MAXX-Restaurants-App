@@ -139,11 +139,12 @@ export namespace DatabaseMethods {
             });
 
             var x: any = {
-                $project: {}
+                $project: {
+                    _id: 0
+                }
             };
 
             this.keyList.map(key => {
-
                 if(key.match(/FK$/i)) {
                     x.$project[key] = "$" + key;
                 } else {
@@ -151,7 +152,7 @@ export namespace DatabaseMethods {
                 }
             });
 
-            pipeline.push();
+            pipeline.push(x);
 
             if (options) {
                 const matchOptions: any = {

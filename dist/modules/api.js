@@ -6,6 +6,7 @@ var accounts_1 = require("./accounts");
 var session_1 = require("./session");
 var restaurants_1 = require("./restaurants");
 var posts_1 = require("./posts");
+var restaurant_ratings_1 = require("./restaurant-ratings");
 var API = /** @class */ (function () {
     function API(main) {
         this.app = express();
@@ -14,6 +15,7 @@ var API = /** @class */ (function () {
         this.accounts = new accounts_1.Accounts(main);
         this.sessions = new session_1.Sessions(main);
         this.restaurants = new restaurants_1.Restaurants(main);
+        this.restaurantRatings = new restaurant_ratings_1.RestaurantRatings(main);
         this.posts = new posts_1.Posts(main);
     }
     Object.defineProperty(API.prototype, "routes", {
@@ -29,6 +31,7 @@ var API = /** @class */ (function () {
         this.app.post("/add-restaurant", this.addRestaurantAPI.bind(this));
         this.app.post("/add-review", this.addReviewAPI.bind(this));
         this.app.post("/add-comment", this.addCommentAPI.bind(this));
+        this.app.post("/add-restaurant-rating", this.addRestaurantRatingAPI.bind(this));
     };
     API.prototype.loginAPI = function (req, res, next) {
         var _this = this;
@@ -133,6 +136,26 @@ var API = /** @class */ (function () {
         })
             .catch(function (e) {
             res.send("ESKETIT/api/add-comment<br>Big Error");
+            console.error(e);
+        });
+    };
+    API.prototype.addRestaurantRatingAPI = function (req, res, next) {
+        if (next === void 0) { next = null; }
+        this.restaurantRatings
+            .createRestaurantRating(req.body)
+            .then(function (rest) {
+            if (rest.hasDoc) {
+                console.log("Restaurant rating added");
+                var response = new main_1.Results(true, rest, null);
+                res.send("ESKETIT/api/add-restaurant-rating<br>Restaurant rating added<br><br>" + JSON.stringify(response));
+            }
+            else {
+                var response = new main_1.Results(false, rest, "Restaurant rating not added");
+                res.send("ESKETIT/api/add-restaurant-rating<br>" + JSON.stringify(response));
+            }
+        })
+            .catch(function (e) {
+            res.send("ESKETIT/api/add-restaurant-rating<br>Big Error");
             console.error(e);
         });
     };

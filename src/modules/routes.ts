@@ -18,6 +18,7 @@ export class Routes {
     // posts: Posts;
 
     constructor(main: Main) {
+        this.app.set("views", join(__dirname, "../views"));
         this.createRoutes();
         this.main = main;
 
@@ -45,7 +46,7 @@ export class Routes {
     }
 
     indexView(req: express.Request, res: express.Response, next: express.NextFunction = null) {
-        res.sendFile(join(__dirname, "../views/index.html"));
+        res.render(join(__dirname, "../views/index.html"));
     }
 
     restaurantsView(req: express.Request, res: express.Response, next: express.NextFunction = null) {
@@ -74,12 +75,13 @@ export class Routes {
 
     // testbench
     testBenchView(req: express.Request, res: express.Response, next: express.NextFunction = null) {
-        res.sendFile(join(__dirname, "../views/testbench.html"));
+        res.render("testbench-body");
+        // res.sendFile(join(__dirname, "../views/testbench.html"));
     }
     test(req: express.Request, res: express.Response, next: express.NextFunction = null) {
         res.sendFile(join(__dirname, "../views/testbench.html"));
 
-        new DatabaseMethods.Post(this.main.database)
+        new DatabaseMethods.RestaurantRating(this.main.database)
             .joinAll()
             .then(d => {
                 console.log(d);

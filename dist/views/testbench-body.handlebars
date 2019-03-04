@@ -1,0 +1,61 @@
+<div>
+    <h2>Sign Up</h2>
+    <form action="/api/signup" method="post">
+        <input type="text" name="username" value="username">
+        <input type="password" name="password" value="password">
+        <input type="password" name="password-confirm" value="password">
+        <button>Submit</button>
+    </form>
+</div>
+<div>
+    <h2>Login</h2>
+    <form action="/api/login" method="post">
+        <input type="text" name="username" value="username">
+        <input type="password" name="password" value="password">
+        <button>Submit</button>
+    </form>
+</div>
+<div>
+    <h2>Add Restaurant</h2>
+    <form action="/api/add-restaurant" method="post">
+        <input type="text" name="name" value="name">
+        <input type="text" name="description" value="description">
+        <input type="text" name="street" value="801 Boush st.">
+        <input type="text" name="apt" value="204">
+        <input type="text" name="city" value="Norfolk">
+        <input type="text" name="state" value="VA">
+        <select name="country" id="">
+            <option value="usa">United States</option>
+        </select>
+        <input type="text" name="zip" value="12345">
+        <button>Submit</button>
+    </form>
+</div>
+<div>
+    <h2>Add Review</h2>
+    <form action="/api/add-review" method="post">
+        <input type="text" name="content" value="This is a review">
+        <input type="text" name="title" value="Review Title">
+        <input type="text" name="userFK" value="4f4cd5c0-3bac-11e9-bbac-6d01dbf4289e">
+        <input type="text" name="restaurantFK" value="725b9ac0-3c5a-11e9-a2db-112afb550812">
+        <button>Submit</button>
+    </form>
+</div>
+<div>
+    <h2>Add Comment</h2>
+    <form action="/api/add-comment" method="post">
+        <input type="text" name="content" value="This is a comment">
+        <input type="text" name="postFK" value="0e4d2ba0-3c66-11e9-b889-01d178771eb4">
+        <input type="text" name="userFK" value="4f4cd5c0-3bac-11e9-bbac-6d01dbf4289e">
+        <button>Submit</button>
+    </form>
+</div>
+<div>
+    <h2>Add Restaurant Rating</h2>
+    <form action="/api/add-restaurant-rating" method="post">
+        <input type="text" name="restaurantFK" value="725b9ac0-3c5a-11e9-a2db-112afb550812">
+        <input type="text" name="postFK" value="0e4d2ba0-3c66-11e9-b889-01d178771eb4">
+        <input type="text" name="rating" value="5">
+        <button>Submit</button>
+    </form>
+</div>

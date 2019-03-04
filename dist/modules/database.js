@@ -116,7 +116,9 @@ var DatabaseMethods;
                 });
             });
             var x = {
-                $project: {}
+                $project: {
+                    _id: 0
+                }
             };
             this.keyList.map(function (key) {
                 if (key.match(/FK$/i)) {
@@ -126,7 +128,7 @@ var DatabaseMethods;
                     x.$project[key] = 1;
                 }
             });
-            pipeline.push();
+            pipeline.push(x);
             if (options) {
                 var matchOptions_1 = {
                     "$match": {}
