@@ -6,7 +6,7 @@ var Sessions = /** @class */ (function () {
     function Sessions(main) {
         this.main = main;
     }
-    Sessions.prototype.newSession = function (userFK) {
+    Sessions.prototype.createSession = function (userFK) {
         console.log("adding session");
         var session = new database_1.DatabaseMethods.Session(this.main.database);
         session.userFK = userFK;

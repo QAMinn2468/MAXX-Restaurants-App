@@ -1,7 +1,6 @@
 import * as uuid from "uuid/v1";
 import { Main } from "../main";
 import { DatabaseMethods } from "./database";
-import { Document } from "mongoose";
 
 export class Sessions {
     main: Main;
@@ -10,7 +9,7 @@ export class Sessions {
         this.main = main;
     }
 
-    newSession(userFK: string) {
+    createSession(userFK: string) {
         console.log("adding session");
 
         const session = new DatabaseMethods.Session(this.main.database);

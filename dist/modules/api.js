@@ -36,7 +36,7 @@ var API = /** @class */ (function () {
         var docPromise = this.accounts.authenticateAccount(req.body);
         docPromise.then(function (user) {
             if (user.hasDoc) {
-                _this.sessions.newSession(user.userPK)
+                _this.sessions.createSession(user.userPK)
                     .then(function (session) {
                     res.cookie("timeSession", session.sessionPK, {
                         expires: false,

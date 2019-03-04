@@ -2,7 +2,6 @@ import * as express from "express";
 import { Main, Results } from "../main";
 import { Accounts } from "./accounts";
 import { Sessions } from "./session";
-import { Time } from "./time";
 import { Restaurants } from "./restaurants";
 import { Posts } from "./posts";
 
@@ -10,6 +9,7 @@ export class API {
     app = express();
 
     main: Main;
+
     accounts: Accounts;
     sessions: Sessions;
     restaurants: Restaurants;
@@ -41,7 +41,7 @@ export class API {
 
         docPromise.then((user) => {
             if(user.hasDoc) {
-                this.sessions.newSession(user.userPK)
+                this.sessions.createSession(user.userPK)
                     .then(session => {
                         res.cookie("timeSession", session.sessionPK, {
                             expires: false, // session.expirationDate

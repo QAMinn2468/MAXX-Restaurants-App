@@ -3,6 +3,7 @@ import * as Mongoose from "mongoose";
 import { Routes } from "./routes";
 import { API } from "./api";
 import { PostType } from "./restaurants";
+import { resolve } from "dns";
 
 export namespace DatabaseMethods {
     export class Database{
@@ -49,7 +50,7 @@ export namespace DatabaseMethods {
                 new Schema({
                     sessionPK: { type: String, required: true },
                     expirationDate: { type: Date, required: true },
-                    userFK: { type: String, required: true },
+                    userFK: { type: String, required: true, ref: "users" },
                 } as ORecord<Session, ValueOf<Mongoose.SchemaDefinition>>, {
                     timestamps: true
                 })
@@ -99,17 +100,80 @@ export namespace DatabaseMethods {
         }
     }
 
+    interface joinConfig {
+        collectionName: string;
+        localField: string;
+        foreignField: string;
+    }
+
     export class Facilitator {
         [key:string]: any;
         keyList: string[];
         db: Database;
         document: Document = null;
-        constructor(db: Database) {}
+        constructor(db: Database) { this.db = db; }
         get hasDoc(): boolean { return !!this.document; }
         find(options: Record<string, any>): Promise<Facilitator> { return null; }
         create(): Document { return null; }
         updateDoc(): void { this.assignDataClassToDoc(); }
         addDoc(doc: Document): void { this.assignDataDocToClass(doc); }
+        finishPipeline(config: joinConfig[], options: TORecord<Facilitator>, resolve: (value?: {} | PromiseLike<{}>) => void, reject: any) {
+            const pipeline: Record<string, any>[] = [];
+
+            config.map(conf => {
+                pipeline.push({
+                    "$lookup": {
+                        "from": conf.collectionName,
+                        "localField": conf.localField,
+                        "foreignField": conf.foreignField,
+                        "as": conf.localField
+                    }
+                });
+
+                pipeline.push({
+                    "$unwind": {
+                        "path": `$${conf.localField}`,
+                        "preserveNullAndEmptyArrays": true
+                    }
+                });
+            });
+
+            var x: any = {
+                $project: {}
+            };
+
+            this.keyList.map(key => {
+
+                if(key.match(/FK$/i)) {
+                    x.$project[key] = "$" + key;
+                } else {
+                    x.$project[key] = 1;
+                }
+            });
+
+            pipeline.push();
+
+            if (options) {
+                const matchOptions: any = {
+                    "$match": {}
+                };
+
+                this.keyList.map(key => {
+                    if (options[key]) matchOptions["$match"][key] = options[key];
+                });
+
+                pipeline.push(matchOptions)
+            }
+
+            console.log("pipeline", pipeline);
+
+            this.model
+                .aggregate(pipeline, (err: any, d: any) => {
+                    if (err) return reject(err);
+
+                    resolve(d);
+                });
+        }
         private assignDataDocToClass(doc: Document) {
             if (!doc) return;
 
@@ -228,6 +292,20 @@ export namespace DatabaseMethods {
 
             return doc;
         }
+
+        joinAll(options?: TORecord<Session>) {
+            return new Promise((resolve, reject) => {
+                const config: joinConfig[] = [
+                    {
+                        collectionName: this.db.userModel.collection.name,
+                        localField: "userFK",
+                        foreignField: "userPK"
+                    }
+                ]
+
+                this.finishPipeline(config, options, resolve, reject);
+            });
+        }
     }
 
     export class Post extends Facilitator {
@@ -324,6 +402,30 @@ export namespace DatabaseMethods {
 
             return doc;
         }
+
+        joinAll(options?: TORecord<Session>) {
+            return new Promise((resolve, reject) => {
+                const config: joinConfig[] = [
+                    {
+                        collectionName: this.db.postModel.collection.name,
+                        localField: "postFK",
+                        foreignField: "postPK"
+                    },
+                    {
+                        collectionName: this.db.userModel.collection.name,
+                        localField: "userFK",
+                        foreignField: "userPK"
+                    },
+                    {
+                        collectionName: this.db.restaurantModel.collection.name,
+                        localField: "restaurantFK",
+                        foreignField: "restaurantPK"
+                    },
+                ]
+
+                this.finishPipeline(config, options, resolve, reject);
+            });
+        }
     }
 
     export class Restaurant extends Facilitator {
@@ -404,6 +506,10 @@ export namespace DatabaseMethods {
          */
         restaurantRatingPK: string;
         /**
+         * FK: Restaurant.restaurantPK
+         */
+        restaurantFK: string;
+        /**
          * FK: Post.postID
          */
         postFK: string;
@@ -413,6 +519,7 @@ export namespace DatabaseMethods {
 
         keyList = [
             "restaurantRatingPK",
+            "restaurantFK",
             "postFK",
             "rating",
         ];
@@ -442,6 +549,7 @@ export namespace DatabaseMethods {
         create() {
             const doc = new this.model({
                 restaurantRatingPK: this.restaurantRatingPK,
+                restaurantFK: this.restaurantFK,
                 postFK: this.postFK,
                 rating: this.rating,
             });
@@ -449,6 +557,25 @@ export namespace DatabaseMethods {
             this.document = doc;
 
             return doc;
+        }
+
+        joinAll(options?: TORecord<Session>) {
+            return new Promise((resolve, reject) => {
+                const config: joinConfig[] = [
+                    {
+                        collectionName: this.db.postModel.collection.name,
+                        localField: "postFK",
+                        foreignField: "postPK"
+                    },
+                    {
+                        collectionName: this.db.restaurantModel.collection.name,
+                        localField: "restaurantFK",
+                        foreignField: "restaurantPK"
+                    },
+                ]
+
+                this.finishPipeline(config, options, resolve, reject);
+            });
         }
     }
 }

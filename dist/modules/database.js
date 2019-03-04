@@ -42,7 +42,7 @@ var DatabaseMethods;
             this.sessionModel = this.connection.model("sessions", new mongoose_1.Schema({
                 sessionPK: { type: String, required: true },
                 expirationDate: { type: Date, required: true },
-                userFK: { type: String, required: true },
+                userFK: { type: String, required: true, ref: "users" },
             }, {
                 timestamps: true
             }));
@@ -86,6 +86,7 @@ var DatabaseMethods;
     var Facilitator = /** @class */ (function () {
         function Facilitator(db) {
             this.document = null;
+            this.db = db;
         }
         Object.defineProperty(Facilitator.prototype, "hasDoc", {
             get: function () { return !!this.document; },
@@ -96,6 +97,54 @@ var DatabaseMethods;
         Facilitator.prototype.create = function () { return null; };
         Facilitator.prototype.updateDoc = function () { this.assignDataClassToDoc(); };
         Facilitator.prototype.addDoc = function (doc) { this.assignDataDocToClass(doc); };
+        Facilitator.prototype.finishPipeline = function (config, options, resolve, reject) {
+            var pipeline = [];
+            config.map(function (conf) {
+                pipeline.push({
+                    "$lookup": {
+                        "from": conf.collectionName,
+                        "localField": conf.localField,
+                        "foreignField": conf.foreignField,
+                        "as": conf.localField
+                    }
+                });
+                pipeline.push({
+                    "$unwind": {
+                        "path": "$" + conf.localField,
+                        "preserveNullAndEmptyArrays": true
+                    }
+                });
+            });
+            var x = {
+                $project: {}
+            };
+            this.keyList.map(function (key) {
+                if (key.match(/FK$/i)) {
+                    x.$project[key] = "$" + key;
+                }
+                else {
+                    x.$project[key] = 1;
+                }
+            });
+            pipeline.push();
+            if (options) {
+                var matchOptions_1 = {
+                    "$match": {}
+                };
+                this.keyList.map(function (key) {
+                    if (options[key])
+                        matchOptions_1["$match"][key] = options[key];
+                });
+                pipeline.push(matchOptions_1);
+            }
+            console.log("pipeline", pipeline);
+            this.model
+                .aggregate(pipeline, function (err, d) {
+                if (err)
+                    return reject(err);
+                resolve(d);
+            });
+        };
         Facilitator.prototype.assignDataDocToClass = function (doc) {
             var _this = this;
             if (!doc)
@@ -192,6 +241,19 @@ var DatabaseMethods;
             this.document = doc;
             return doc;
         };
+        Session.prototype.joinAll = function (options) {
+            var _this = this;
+            return new Promise(function (resolve, reject) {
+                var config = [
+                    {
+                        collectionName: _this.db.userModel.collection.name,
+                        localField: "userFK",
+                        foreignField: "userPK"
+                    }
+                ];
+                _this.finishPipeline(config, options, resolve, reject);
+            });
+        };
         return Session;
     }(Facilitator));
     DatabaseMethods.Session = Session;
@@ -245,6 +307,29 @@ var DatabaseMethods;
             });
             this.document = doc;
             return doc;
+        };
+        Post.prototype.joinAll = function (options) {
+            var _this = this;
+            return new Promise(function (resolve, reject) {
+                var config = [
+                    {
+                        collectionName: _this.db.postModel.collection.name,
+                        localField: "postFK",
+                        foreignField: "postPK"
+                    },
+                    {
+                        collectionName: _this.db.userModel.collection.name,
+                        localField: "userFK",
+                        foreignField: "userPK"
+                    },
+                    {
+                        collectionName: _this.db.restaurantModel.collection.name,
+                        localField: "restaurantFK",
+                        foreignField: "restaurantPK"
+                    },
+                ];
+                _this.finishPipeline(config, options, resolve, reject);
+            });
         };
         return Post;
     }(Facilitator));
@@ -309,6 +394,7 @@ var DatabaseMethods;
             var _this = _super.call(this, db) || this;
             _this.keyList = [
                 "restaurantRatingPK",
+                "restaurantFK",
                 "postFK",
                 "rating",
             ];
@@ -332,11 +418,30 @@ var DatabaseMethods;
         RestaurantRating.prototype.create = function () {
             var doc = new this.model({
                 restaurantRatingPK: this.restaurantRatingPK,
+                restaurantFK: this.restaurantFK,
                 postFK: this.postFK,
                 rating: this.rating,
             });
             this.document = doc;
             return doc;
+        };
+        RestaurantRating.prototype.joinAll = function (options) {
+            var _this = this;
+            return new Promise(function (resolve, reject) {
+                var config = [
+                    {
+                        collectionName: _this.db.postModel.collection.name,
+                        localField: "postFK",
+                        foreignField: "postPK"
+                    },
+                    {
+                        collectionName: _this.db.restaurantModel.collection.name,
+                        localField: "restaurantFK",
+                        foreignField: "restaurantPK"
+                    },
+                ];
+                _this.finishPipeline(config, options, resolve, reject);
+            });
         };
         return RestaurantRating;
     }(Facilitator));

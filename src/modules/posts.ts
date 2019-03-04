@@ -18,10 +18,6 @@ export class Posts {
         rest.userFK = data.userFK;
         rest.postType = PostType.REVIEW;
 
-        // rest.restaurantFK = data.restaurantFK;
-        // rest.upvoteFKs = data.upvoteFKs;
-        // rest.downvoteFKs = data.downvoteFKs;
-
         // this data is needed since we're making a review
         rest.title = data.title;
         rest.restaurantFK = data.restaurantFK;
@@ -43,10 +39,6 @@ export class Posts {
         rest.content = data.content;
         rest.userFK = data.userFK;
         rest.postType = PostType.COMMENT;
-
-        // rest.restaurantFK = data.restaurantFK;
-        // rest.upvoteFKs = data.upvoteFKs;
-        // rest.downvoteFKs = data.downvoteFKs;
 
         // this data is needed since we're making a comment
         rest.postFK = data.postFK;

@@ -1,15 +1,30 @@
 import * as express from "express";
-import { Main } from "../main";
 import { join } from "path";
+import { Main } from "../main";
+import { Accounts } from "./accounts";
+import { Sessions } from "./session";
+import { Restaurants } from "./restaurants";
+import { Posts } from "./posts";
+import { DatabaseMethods } from "./database";
 
 export class Routes {
     app = express();
 
     main: Main;
 
+    // accounts: Accounts;
+    sessions: Sessions;
+    // restaurants: Restaurants;
+    // posts: Posts;
+
     constructor(main: Main) {
         this.createRoutes();
         this.main = main;
+
+        // this.accounts = new Accounts(main);
+        this.sessions = new Sessions(main);
+        // this.restaurants = new Restaurants(main);
+        // this.posts = new Posts(main);
     }
 
     get routes() {
@@ -17,15 +32,16 @@ export class Routes {
     }
 
     createRoutes() {
-        this.app.get("/", this.indexView);
-        this.app.get("/restaurants", this.restaurantsView);
-        this.app.get("/restaurants/:id", this.restaurantView);
-        this.app.get("/reviews", this.reviewsView);
-        this.app.get("/reviews/:id", this.reviewView);
-        this.app.get("/login", this.loginView);
-        this.app.get("/signup", this.signupView);
+        this.app.get("/", this.indexView.bind(this));
+        this.app.get("/restaurants", this.restaurantsView.bind(this));
+        this.app.get("/restaurants/:id", this.restaurantView.bind(this));
+        this.app.get("/reviews", this.reviewsView.bind(this));
+        this.app.get("/reviews/:id", this.reviewView.bind(this));
+        this.app.get("/login", this.loginView.bind(this));
+        this.app.get("/signup", this.signupView.bind(this));
         // testbench
-        this.app.get("/testbench", this.testBenchView);
+        this.app.get("/testbench", this.testBenchView.bind(this));
+        this.app.get("/test", this.test.bind(this));
     }
 
     indexView(req: express.Request, res: express.Response, next: express.NextFunction = null) {
@@ -59,5 +75,15 @@ export class Routes {
     // testbench
     testBenchView(req: express.Request, res: express.Response, next: express.NextFunction = null) {
         res.sendFile(join(__dirname, "../views/testbench.html"));
+    }
+    test(req: express.Request, res: express.Response, next: express.NextFunction = null) {
+        res.sendFile(join(__dirname, "../views/testbench.html"));
+
+        new DatabaseMethods.Post(this.main.database)
+            .joinAll()
+            .then(d => {
+                console.log(d);
+            })
+            .catch(e => console.error(e));
     }
 }
