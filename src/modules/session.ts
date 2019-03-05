@@ -16,7 +16,7 @@ export class Sessions {
         session.userFK = userFK;
 
         return new Promise<DatabaseMethods.Session>((resolve, reject) => {
-            session.find({
+            session.findOne({
                 userFK
             }).then(session => {
                 const sessionPK = uuid();

@@ -86,6 +86,7 @@ var DatabaseMethods;
     var Facilitator = /** @class */ (function () {
         function Facilitator(db) {
             this.document = null;
+            this.selfFacilitated = [];
             this.db = db;
         }
         Object.defineProperty(Facilitator.prototype, "hasDoc", {
@@ -93,7 +94,7 @@ var DatabaseMethods;
             enumerable: true,
             configurable: true
         });
-        Facilitator.prototype.find = function (options) { return null; };
+        Facilitator.prototype.findOne = function (options) { return null; };
         Facilitator.prototype.create = function () { return null; };
         Facilitator.prototype.updateDoc = function () { this.assignDataClassToDoc(); };
         Facilitator.prototype.addDoc = function (doc) { this.assignDataDocToClass(doc); };
@@ -139,7 +140,6 @@ var DatabaseMethods;
                 });
                 pipeline.push(matchOptions_1);
             }
-            console.log("pipeline", pipeline);
             this.model
                 .aggregate(pipeline, function (err, d) {
                 if (err)
@@ -182,8 +182,9 @@ var DatabaseMethods;
             _this.addDoc(doc);
             return _this;
         }
-        User.prototype.find = function (options) {
+        User.prototype.findOne = function (options) {
             var _this = this;
+            if (options === void 0) { options = null; }
             return new Promise(function (resolve, reject) {
                 _this.model.findOne(options, function (err, doc) {
                     if (err)
@@ -191,6 +192,20 @@ var DatabaseMethods;
                     _this.document = doc;
                     _this.addDoc(doc);
                     resolve(_this);
+                });
+            });
+        };
+        User.prototype.find = function (options) {
+            var _this = this;
+            if (options === void 0) { options = null; }
+            return new Promise(function (resolve, reject) {
+                _this.model.find(options, function (err, docs) {
+                    if (err)
+                        return reject(err);
+                    docs.map(function (doc) {
+                        _this.selfFacilitated.push(new User(_this.db, doc));
+                    });
+                    resolve(_this.selfFacilitated);
                 });
             });
         };
@@ -222,8 +237,9 @@ var DatabaseMethods;
             _this.addDoc(doc);
             return _this;
         }
-        Session.prototype.find = function (options) {
+        Session.prototype.findOne = function (options) {
             var _this = this;
+            if (options === void 0) { options = null; }
             return new Promise(function (resolve, reject) {
                 _this.model.findOne(options, function (err, doc) {
                     if (err)
@@ -231,6 +247,20 @@ var DatabaseMethods;
                     _this.document = doc;
                     _this.addDoc(doc);
                     resolve(_this);
+                });
+            });
+        };
+        Session.prototype.find = function (options) {
+            var _this = this;
+            if (options === void 0) { options = null; }
+            return new Promise(function (resolve, reject) {
+                _this.model.find(options, function (err, docs) {
+                    if (err)
+                        return reject(err);
+                    docs.map(function (doc) {
+                        _this.selfFacilitated.push(new Session(_this.db, doc));
+                    });
+                    resolve(_this.selfFacilitated);
                 });
             });
         };
@@ -283,8 +313,9 @@ var DatabaseMethods;
             _this.addDoc(doc);
             return _this;
         }
-        Post.prototype.find = function (options) {
+        Post.prototype.findOne = function (options) {
             var _this = this;
+            if (options === void 0) { options = null; }
             return new Promise(function (resolve, reject) {
                 _this.model.findOne(options, function (err, doc) {
                     if (err)
@@ -292,6 +323,20 @@ var DatabaseMethods;
                     _this.document = doc;
                     _this.addDoc(doc);
                     resolve(_this);
+                });
+            });
+        };
+        Post.prototype.find = function (options) {
+            var _this = this;
+            if (options === void 0) { options = null; }
+            return new Promise(function (resolve, reject) {
+                _this.model.find(options, function (err, docs) {
+                    if (err)
+                        return reject(err);
+                    docs.map(function (doc) {
+                        _this.selfFacilitated.push(new Post(_this.db, doc));
+                    });
+                    resolve(_this.selfFacilitated);
                 });
             });
         };
@@ -359,8 +404,9 @@ var DatabaseMethods;
             _this.addDoc(doc);
             return _this;
         }
-        Restaurant.prototype.find = function (options) {
+        Restaurant.prototype.findOne = function (options) {
             var _this = this;
+            if (options === void 0) { options = null; }
             return new Promise(function (resolve, reject) {
                 _this.model.findOne(options, function (err, doc) {
                     if (err)
@@ -368,6 +414,20 @@ var DatabaseMethods;
                     _this.document = doc;
                     _this.addDoc(doc);
                     resolve(_this);
+                });
+            });
+        };
+        Restaurant.prototype.find = function (options) {
+            var _this = this;
+            if (options === void 0) { options = null; }
+            return new Promise(function (resolve, reject) {
+                _this.model.find(options, function (err, docs) {
+                    if (err)
+                        return reject(err);
+                    docs.map(function (doc) {
+                        _this.selfFacilitated.push(new Restaurant(_this.db, doc));
+                    });
+                    resolve(_this.selfFacilitated);
                 });
             });
         };
@@ -405,8 +465,9 @@ var DatabaseMethods;
             _this.addDoc(doc);
             return _this;
         }
-        RestaurantRating.prototype.find = function (options) {
+        RestaurantRating.prototype.findOne = function (options) {
             var _this = this;
+            if (options === void 0) { options = null; }
             return new Promise(function (resolve, reject) {
                 _this.model.findOne(options, function (err, doc) {
                     if (err)
@@ -414,6 +475,20 @@ var DatabaseMethods;
                     _this.document = doc;
                     _this.addDoc(doc);
                     resolve(_this);
+                });
+            });
+        };
+        RestaurantRating.prototype.find = function (options) {
+            var _this = this;
+            if (options === void 0) { options = null; }
+            return new Promise(function (resolve, reject) {
+                _this.model.find(options, function (err, docs) {
+                    if (err)
+                        return reject(err);
+                    docs.map(function (doc) {
+                        _this.selfFacilitated.push(new RestaurantRating(_this.db, doc));
+                    });
+                    resolve(_this.selfFacilitated);
                 });
             });
         };

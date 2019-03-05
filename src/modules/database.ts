@@ -3,7 +3,6 @@ import * as Mongoose from "mongoose";
 import { Routes } from "./routes";
 import { API } from "./api";
 import { PostType } from "./restaurants";
-import { resolve } from "dns";
 
 export namespace DatabaseMethods {
     export class Database{
@@ -106,18 +105,19 @@ export namespace DatabaseMethods {
         foreignField: string;
     }
 
-    export class Facilitator {
+    export class Facilitator<T> {
         [key:string]: any;
         keyList: string[];
         db: Database;
         document: Document = null;
+        selfFacilitated: T[] = [];
         constructor(db: Database) { this.db = db; }
         get hasDoc(): boolean { return !!this.document; }
-        find(options: Record<string, any>): Promise<Facilitator> { return null; }
+        findOne(options: Record<string, any>): Promise<T> { return null; }
         create(): Document { return null; }
         updateDoc(): void { this.assignDataClassToDoc(); }
         addDoc(doc: Document): void { this.assignDataDocToClass(doc); }
-        finishPipeline(config: joinConfig[], options: TORecord<Facilitator>, resolve: (value?: {} | PromiseLike<{}>) => void, reject: any) {
+        finishPipeline(config: joinConfig[], options: TORecord<T>, resolve: (value?: any | PromiseLike<any>) => void, reject: any) {
             const pipeline: Record<string, any>[] = [];
 
             config.map(conf => {
@@ -160,13 +160,11 @@ export namespace DatabaseMethods {
                 };
 
                 this.keyList.map(key => {
-                    if (options[key]) matchOptions["$match"][key] = options[key];
+                    if ((<any>options)[key]) matchOptions["$match"][key] = (<any>options)[key];
                 });
 
                 pipeline.push(matchOptions)
             }
-
-            console.log("pipeline", pipeline);
 
             this.model
                 .aggregate(pipeline, (err: any, d: any) => {
@@ -191,7 +189,7 @@ export namespace DatabaseMethods {
         }
     }
 
-    export class User extends Facilitator {
+    export class User extends Facilitator<User> {
         /**
          * PK
          */
@@ -217,7 +215,7 @@ export namespace DatabaseMethods {
             this.addDoc(doc);
         }
 
-        find(options: TORecord<User>) {
+        findOne(options: TORecord<User> = null) {
             return new Promise<User>((resolve, reject) => {
                 this.model.findOne(options, (err, doc) => {
                     if(err) return reject(err);
@@ -225,6 +223,20 @@ export namespace DatabaseMethods {
                     this.document = doc;
                     this.addDoc(doc);
                     resolve(this);
+                });
+            });
+        }
+
+        find(options: TORecord<User> = null) {
+            return new Promise<User[]>((resolve, reject) => {
+                this.model.find (options, (err, docs) => {
+                    if(err) return reject(err);
+
+                    docs.map(doc => {
+                        this.selfFacilitated.push(new User(this.db, doc));
+                    });
+
+                    resolve(this.selfFacilitated);
                 });
             });
         }
@@ -243,7 +255,7 @@ export namespace DatabaseMethods {
         }
     }
 
-    export class Session extends Facilitator {
+    export class Session extends Facilitator<Session> {
         /**
          * PK
          */
@@ -270,7 +282,7 @@ export namespace DatabaseMethods {
             this.addDoc(doc);
         }
 
-        find(options: TORecord<Session>) {
+        findOne(options: TORecord<Session> = null) {
             return new Promise<Session>((resolve, reject) => {
                 this.model.findOne(options, (err, doc) => {
                     if(err) return reject(err);
@@ -278,6 +290,20 @@ export namespace DatabaseMethods {
                     this.document = doc;
                     this.addDoc(doc);
                     resolve(this);
+                });
+            });
+        }
+
+        find(options: TORecord<Session> = null) {
+            return new Promise<Session[]>((resolve, reject) => {
+                this.model.find (options, (err, docs) => {
+                    if(err) return reject(err);
+
+                    docs.map(doc => {
+                        this.selfFacilitated.push(new Session(this.db, doc));
+                    });
+
+                    resolve(this.selfFacilitated);
                 });
             });
         }
@@ -295,7 +321,7 @@ export namespace DatabaseMethods {
         }
 
         joinAll(options?: TORecord<Session>) {
-            return new Promise((resolve, reject) => {
+            return new Promise<any[]>((resolve, reject) => {
                 const config: joinConfig[] = [
                     {
                         collectionName: this.db.userModel.collection.name,
@@ -309,7 +335,7 @@ export namespace DatabaseMethods {
         }
     }
 
-    export class Post extends Facilitator {
+    export class Post extends Facilitator<Post> {
         /**
          * PK
          */
@@ -374,7 +400,7 @@ export namespace DatabaseMethods {
             this.addDoc(doc);
         }
 
-        find(options: TORecord<Post>) {
+        findOne(options: TORecord<Post> = null) {
             return new Promise<Post>((resolve, reject) => {
                 this.model.findOne(options, (err, doc) => {
                     if(err) return reject(err);
@@ -382,6 +408,20 @@ export namespace DatabaseMethods {
                     this.document = doc;
                     this.addDoc(doc);
                     resolve(this);
+                });
+            });
+        }
+
+        find(options: TORecord<Post> = null) {
+            return new Promise<Post[]>((resolve, reject) => {
+                this.model.find (options, (err, docs) => {
+                    if (err) return reject(err);
+
+                    docs.map(doc => {
+                        this.selfFacilitated.push(new Post(this.db, doc));
+                    });
+
+                    resolve(this.selfFacilitated);
                 });
             });
         }
@@ -404,8 +444,8 @@ export namespace DatabaseMethods {
             return doc;
         }
 
-        joinAll(options?: TORecord<Session>) {
-            return new Promise((resolve, reject) => {
+        joinAll(options?: TORecord<Post>) {
+            return new Promise<any[]>((resolve, reject) => {
                 const config: joinConfig[] = [
                     {
                         collectionName: this.db.postModel.collection.name,
@@ -429,7 +469,7 @@ export namespace DatabaseMethods {
         }
     }
 
-    export class Restaurant extends Facilitator {
+    export class Restaurant extends Facilitator<Restaurant> {
         /**
          * PK
          */
@@ -470,7 +510,7 @@ export namespace DatabaseMethods {
             this.addDoc(doc);
         }
 
-        find(options: TORecord<Restaurant>) {
+        findOne(options: TORecord<Restaurant> = null) {
             return new Promise<Restaurant>((resolve, reject) => {
                 this.model.findOne(options, (err, doc) => {
                     if(err) return reject(err);
@@ -478,6 +518,20 @@ export namespace DatabaseMethods {
                     this.document = doc;
                     this.addDoc(doc);
                     resolve(this);
+                });
+            });
+        }
+
+        find(options: TORecord<Restaurant> = null) {
+            return new Promise<Restaurant[]>((resolve, reject) => {
+                this.model.find (options, (err, docs) => {
+                    if(err) return reject(err);
+
+                    docs.map(doc => {
+                        this.selfFacilitated.push(new Restaurant(this.db, doc));
+                    });
+
+                    resolve(this.selfFacilitated);
                 });
             });
         }
@@ -501,7 +555,7 @@ export namespace DatabaseMethods {
         }
     }
 
-    export class RestaurantRating extends Facilitator {
+    export class RestaurantRating extends Facilitator<RestaurantRating> {
         /**
          * PK
          */
@@ -535,7 +589,7 @@ export namespace DatabaseMethods {
             this.addDoc(doc);
         }
 
-        find(options: TORecord<RestaurantRating>) {
+        findOne(options: TORecord<RestaurantRating> = null) {
             return new Promise<RestaurantRating>((resolve, reject) => {
                 this.model.findOne(options, (err, doc) => {
                     if(err) return reject(err);
@@ -543,6 +597,20 @@ export namespace DatabaseMethods {
                     this.document = doc;
                     this.addDoc(doc);
                     resolve(this);
+                });
+            });
+        }
+
+        find(options: TORecord<RestaurantRating> = null) {
+            return new Promise<RestaurantRating[]>((resolve, reject) => {
+                this.model.find (options, (err, docs) => {
+                    if(err) return reject(err);
+
+                    docs.map(doc => {
+                        this.selfFacilitated.push(new RestaurantRating(this.db, doc));
+                    });
+
+                    resolve(this.selfFacilitated);
                 });
             });
         }
@@ -560,8 +628,8 @@ export namespace DatabaseMethods {
             return doc;
         }
 
-        joinAll(options?: TORecord<Session>) {
-            return new Promise((resolve, reject) => {
+        joinAll(options?: TORecord<RestaurantRating>) {
+            return new Promise<any[]>((resolve, reject) => {
                 const config: joinConfig[] = [
                     {
                         collectionName: this.db.postModel.collection.name,

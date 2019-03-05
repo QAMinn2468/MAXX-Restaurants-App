@@ -22,7 +22,7 @@ var Accounts = /** @class */ (function () {
             }
             new Promise(function (resolve, reject) {
                 user
-                    .find({
+                    .findOne({
                     username: username.toLowerCase(),
                 })
                     .then(function (doc) {
@@ -61,7 +61,7 @@ var Accounts = /** @class */ (function () {
         console.log("verifying account:", username, password);
         var user = new database_1.DatabaseMethods.User(this.main.database);
         return new Promise(function (resolve, reject) {
-            user.find({
+            user.findOne({
                 username: username
             })
                 .then(function (doc) {

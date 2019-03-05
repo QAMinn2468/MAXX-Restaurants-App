@@ -25,7 +25,7 @@ export class Accounts {
 
             new Promise((resolve, reject) => {
                 user
-                .find({
+                .findOne({
                     username: username.toLowerCase(),
                 })
                 .then(doc => {
@@ -66,7 +66,7 @@ export class Accounts {
         const user = new DatabaseMethods.User(this.main.database);
 
         return new Promise<DatabaseMethods.User>((resolve, reject) => {
-            user.find({
+            user.findOne({
                 username
             })
             .then(doc => {

@@ -7,6 +7,7 @@ var Posts = /** @class */ (function () {
         this.main = main;
     }
     Posts.prototype.createReview = function (data) {
+        var _this = this;
         console.log("Creating review");
         var rest = new database_1.DatabaseMethods.Post(this.main.database);
         rest.postPK = uuid();
@@ -20,7 +21,21 @@ var Posts = /** @class */ (function () {
             rest.create().save(function (err, doc) {
                 if (err)
                     return reject(err);
-                resolve(rest);
+                // add rating in one go
+                if (data.rating) {
+                    _this.main.apiModule.restaurantRatings.createRestaurantRating({
+                        restaurantFK: data.restaurantFK,
+                        postFK: data.postFK,
+                        rating: data.rating,
+                    }).then(function (rat) {
+                        resolve(rest);
+                    }).catch(function (e) {
+                        reject(e);
+                    });
+                }
+                else {
+                    resolve(rest);
+                }
             });
         });
     };

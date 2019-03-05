@@ -38,7 +38,7 @@ var Routes = /** @class */ (function () {
     };
     Routes.prototype.indexView = function (req, res, next) {
         if (next === void 0) { next = null; }
-        res.render(path_1.join(__dirname, "../views/index.html"));
+        res.sendFile(path_1.join(__dirname, "../views/index.html"));
     };
     Routes.prototype.restaurantsView = function (req, res, next) {
         if (next === void 0) { next = null; }
@@ -66,19 +66,46 @@ var Routes = /** @class */ (function () {
     };
     // testbench
     Routes.prototype.testBenchView = function (req, res, next) {
+        var _this = this;
         if (next === void 0) { next = null; }
-        res.render("testbench-body");
+        var comp = {};
+        console.log("cookies", req.cookies);
+        new database_1.DatabaseMethods.Session(this.main.database)
+            .findOne({
+            sessionPK: req.cookies.timeSession
+        })
+            .then(function (sessionDoc) { return new database_1.DatabaseMethods.User(_this.main.database).findOne({
+            userPK: sessionDoc.userFK
+        }); })
+            .then(function (userDoc) { return comp.userDoc = userDoc; })
+            .then(function () { return new database_1.DatabaseMethods.Restaurant(_this.main.database).find(); })
+            .then(function (restaurantDocs) { return comp.restaurantDocs = restaurantDocs; })
+            .then(function () { return new database_1.DatabaseMethods.Post(_this.main.database).find(); })
+            .then(function (postDocs) { return comp.postDocs = postDocs; })
+            .then(function () {
+            // console.log("got docs", Object.keys(comp));
+            console.log("got docs", (comp.userDoc));
+            res.render("testbench-home", {
+                user: comp.userDoc,
+                restaurants: comp.restaurantDocs,
+                posts: comp.postDocs,
+            });
+        })
+            .catch(function (e) { return console.error(e); });
         // res.sendFile(join(__dirname, "../views/testbench.html"));
     };
     Routes.prototype.test = function (req, res, next) {
         if (next === void 0) { next = null; }
-        res.sendFile(path_1.join(__dirname, "../views/testbench.html"));
         new database_1.DatabaseMethods.RestaurantRating(this.main.database)
             .joinAll()
             .then(function (d) {
             console.log(d);
+            res.redirect("/testbench");
         })
-            .catch(function (e) { return console.error(e); });
+            .catch(function (e) {
+            console.error(e);
+            res.redirect("/testbench");
+        });
     };
     return Routes;
 }());

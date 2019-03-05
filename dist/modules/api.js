@@ -44,8 +44,8 @@ var API = /** @class */ (function () {
                     res.cookie("timeSession", session.sessionPK, {
                         expires: false,
                     });
-                    var response = new main_1.Results(true, { user: user, session: session }, null);
-                    res.send("ESKETIT/api/login<br>Logged In<br><br><pre>" + JSON.stringify(response) + "</pre>");
+                    // const response = new Results(true, {user, session}, null);
+                    res.redirect("/testbench");
                     console.log("login successful");
                 })
                     .catch(function (e) {
@@ -67,8 +67,8 @@ var API = /** @class */ (function () {
         this.accounts.createAccount(req.body)
             .then(function (user) {
             if (user.hasDoc) {
-                var response = new main_1.Results(true, user, null);
-                res.send("ESKETIT/api/signup<br>Signed Up<br><br><pre>" + JSON.stringify(response) + "</pre>");
+                // const response = new Results(true, user, null);
+                res.redirect("/testbench");
             }
             else {
                 // const response = new Results(false, user, "Could not create account");
@@ -86,8 +86,8 @@ var API = /** @class */ (function () {
             .then(function (rest) {
             if (rest.hasDoc) {
                 console.log("Restaurant added");
-                var response = new main_1.Results(true, rest, null);
-                res.send("ESKETIT/api/add-restaurant<br>Restaurant added<br><br>" + JSON.stringify(response));
+                // const response = new Results(true, rest, null);
+                res.redirect("/testbench");
             }
             else {
                 var response = new main_1.Results(false, rest, "Restaurant not added");
@@ -106,8 +106,8 @@ var API = /** @class */ (function () {
             .then(function (rest) {
             if (rest.hasDoc) {
                 console.log("Review added");
-                var response = new main_1.Results(true, rest, null);
-                res.send("ESKETIT/api/add-review<br>Review added<br><br>" + JSON.stringify(response));
+                // const response = new Results(true, rest, null);
+                res.redirect("/testbench");
             }
             else {
                 var response = new main_1.Results(false, rest, "Review not added");
@@ -126,8 +126,8 @@ var API = /** @class */ (function () {
             .then(function (rest) {
             if (rest.hasDoc) {
                 console.log("Comment added");
-                var response = new main_1.Results(true, rest, null);
-                res.send("ESKETIT/api/add-comment<br>Comment added<br><br>" + JSON.stringify(response));
+                // const response = new Results(true, rest, null);
+                res.redirect("/testbench");
             }
             else {
                 var response = new main_1.Results(false, rest, "Comment not added");
@@ -146,8 +146,8 @@ var API = /** @class */ (function () {
             .then(function (rest) {
             if (rest.hasDoc) {
                 console.log("Restaurant rating added");
-                var response = new main_1.Results(true, rest, null);
-                res.send("ESKETIT/api/add-restaurant-rating<br>Restaurant rating added<br><br>" + JSON.stringify(response));
+                // const response = new Results(true, rest, null);
+                res.redirect("/testbench");
             }
             else {
                 var response = new main_1.Results(false, rest, "Restaurant rating not added");

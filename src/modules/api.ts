@@ -50,8 +50,8 @@ export class API {
                         res.cookie("timeSession", session.sessionPK, {
                             expires: false, // session.expirationDate
                         });
-                        const response = new Results(true, {user, session}, null);
-                        res.send(`ESKETIT/api/login<br>Logged In<br><br><pre>${JSON.stringify(response)}</pre>`);
+                        // const response = new Results(true, {user, session}, null);
+                        res.redirect("/testbench");
                         console.log("login successful");
                     })
                     .catch(e => {
@@ -72,8 +72,8 @@ export class API {
         this.accounts.createAccount(req.body)
         .then(user => {
                 if (user.hasDoc) {
-                    const response = new Results(true, user, null);
-                    res.send(`ESKETIT/api/signup<br>Signed Up<br><br><pre>${JSON.stringify(response)}</pre>`);
+                    // const response = new Results(true, user, null);
+                    res.redirect("/testbench");
                 } else {
                     // const response = new Results(false, user, "Could not create account");
                     res.send(`ESKETIT/api/signup<br>Could not create account`);
@@ -91,9 +91,9 @@ export class API {
                 if (rest.hasDoc) {
                     console.log("Restaurant added");
 
-                    const response = new Results(true, rest, null);
+                    // const response = new Results(true, rest, null);
 
-                    res.send(`ESKETIT/api/add-restaurant<br>Restaurant added<br><br>${JSON.stringify(response)}`);
+                    res.redirect("/testbench");
                 } else {
                     const response = new Results(false, rest, "Restaurant not added");
 
@@ -113,9 +113,9 @@ export class API {
                 if (rest.hasDoc) {
                     console.log("Review added");
 
-                    const response = new Results(true, rest, null);
+                    // const response = new Results(true, rest, null);
 
-                    res.send(`ESKETIT/api/add-review<br>Review added<br><br>${JSON.stringify(response)}`);
+                    res.redirect("/testbench");
                 } else {
                     const response = new Results(false, rest, "Review not added");
 
@@ -135,9 +135,9 @@ export class API {
                 if (rest.hasDoc) {
                     console.log("Comment added");
 
-                    const response = new Results(true, rest, null);
+                    // const response = new Results(true, rest, null);
 
-                    res.send(`ESKETIT/api/add-comment<br>Comment added<br><br>${JSON.stringify(response)}`);
+                    res.redirect("/testbench");
                 } else {
                     const response = new Results(false, rest, "Comment not added");
 
@@ -157,9 +157,9 @@ export class API {
                 if (rest.hasDoc) {
                     console.log("Restaurant rating added");
 
-                    const response = new Results(true, rest, null);
+                    // const response = new Results(true, rest, null);
 
-                    res.send(`ESKETIT/api/add-restaurant-rating<br>Restaurant rating added<br><br>${JSON.stringify(response)}`);
+                    res.redirect("/testbench");
                 } else {
                     const response = new Results(false, rest, "Restaurant rating not added");
 

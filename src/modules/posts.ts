@@ -1,6 +1,7 @@
 import * as uuid from "uuid/v1";
 import { Main } from "../main";
 import { DatabaseMethods } from "./database";
+import { RestaurantRatings } from "./restaurant-ratings";
 
 export class Posts {
     main: Main;
@@ -26,7 +27,20 @@ export class Posts {
             rest.create().save((err, doc) => {
                 if (err) return reject(err);
 
-                resolve(rest);
+                // add rating in one go
+                if (data.rating) {
+                    this.main.apiModule.restaurantRatings.createRestaurantRating({
+                        restaurantFK: data.restaurantFK,
+                        postFK: data.postFK,
+                        rating: data.rating,
+                    }).then(rat => {
+                        resolve(rest);
+                    }).catch(e => {
+                        reject(e);
+                    });
+                } else {
+                    resolve(rest);
+                }
             });
         });
     }

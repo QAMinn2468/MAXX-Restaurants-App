@@ -11,7 +11,7 @@ var Sessions = /** @class */ (function () {
         var session = new database_1.DatabaseMethods.Session(this.main.database);
         session.userFK = userFK;
         return new Promise(function (resolve, reject) {
-            session.find({
+            session.findOne({
                 userFK: userFK
             }).then(function (session) {
                 var sessionPK = uuid();
