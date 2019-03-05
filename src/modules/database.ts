@@ -113,7 +113,9 @@ export namespace DatabaseMethods {
         selfFacilitated: T[] = [];
         constructor(db: Database) { this.db = db; }
         get hasDoc(): boolean { return !!this.document; }
-        findOne(options: Record<string, any>): Promise<T> { return null; }
+        findOne(options: Record<string, any> = null): Promise<T> { return null; }
+        find(options: Record<string, any> = null): Promise<T[]> { return null; }
+        remove(options: Record<string, any>): Promise<T> { return null; }
         create(): Document { return null; }
         updateDoc(): void { this.assignDataClassToDoc(); }
         addDoc(doc: Document): void { this.assignDataDocToClass(doc); }
@@ -318,6 +320,16 @@ export namespace DatabaseMethods {
             this.document = doc;
 
             return doc;
+        }
+
+        remove(options: TORecord<Session>) {
+            return new Promise<Session>((resolve, reject) => {
+                this.model.deleteOne(options, (err) => {
+                    if (err) return reject(err);
+
+                    resolve();
+                });
+            });
         }
 
         joinAll(options?: TORecord<Session>) {

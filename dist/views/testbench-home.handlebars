@@ -1,20 +1,26 @@
-<div>
-    <h2>Sign Up</h2>
-    <form action="/api/signup" method="post">
-        <input type="text" name="username" value="username">
-        <input type="password" name="password" value="password">
-        <input type="password" name="password-confirm" value="password">
-        <button>Submit</button>
-    </form>
-</div>
-<div>
-    <h2>Login</h2>
-    <form action="/api/login" method="post">
-        <input type="text" name="username" value="username">
-        <input type="password" name="password" value="password">
-        <button>Submit</button>
-    </form>
-</div>
+{{#if user}}
+    <div>
+        <a href="/logout"><button>Logout</button></a>
+    </div>
+{{else}}
+    <div>
+        <h2>Sign Up</h2>
+        <form action="/api/signup" method="post">
+            <input type="text" name="username" value="username">
+            <input type="password" name="password" value="password">
+            <input type="password" name="password-confirm" value="password">
+            <button>Submit</button>
+        </form>
+    </div>
+    <div>
+        <h2>Login</h2>
+        <form action="/api/login" method="post">
+            <input type="text" name="username" value="username">
+            <input type="password" name="password" value="password">
+            <button>Submit</button>
+        </form>
+    </div>
+{{/if}}
 <div>
     <h2>Add Restaurant</h2>
     <form action="/api/add-restaurant" method="post">

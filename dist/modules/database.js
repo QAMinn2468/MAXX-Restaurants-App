@@ -94,7 +94,15 @@ var DatabaseMethods;
             enumerable: true,
             configurable: true
         });
-        Facilitator.prototype.findOne = function (options) { return null; };
+        Facilitator.prototype.findOne = function (options) {
+            if (options === void 0) { options = null; }
+            return null;
+        };
+        Facilitator.prototype.find = function (options) {
+            if (options === void 0) { options = null; }
+            return null;
+        };
+        Facilitator.prototype.remove = function (options) { return null; };
         Facilitator.prototype.create = function () { return null; };
         Facilitator.prototype.updateDoc = function () { this.assignDataClassToDoc(); };
         Facilitator.prototype.addDoc = function (doc) { this.assignDataDocToClass(doc); };
@@ -272,6 +280,16 @@ var DatabaseMethods;
             });
             this.document = doc;
             return doc;
+        };
+        Session.prototype.remove = function (options) {
+            var _this = this;
+            return new Promise(function (resolve, reject) {
+                _this.model.deleteOne(options, function (err) {
+                    if (err)
+                        return reject(err);
+                    resolve();
+                });
+            });
         };
         Session.prototype.joinAll = function (options) {
             var _this = this;

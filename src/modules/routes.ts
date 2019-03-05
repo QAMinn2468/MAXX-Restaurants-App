@@ -39,6 +39,7 @@ export class Routes {
         this.app.get("/reviews", this.reviewsView.bind(this));
         this.app.get("/reviews/:id", this.reviewView.bind(this));
         this.app.get("/login", this.loginView.bind(this));
+        this.app.get("/logout", this.logoutView.bind(this));
         this.app.get("/signup", this.signupView.bind(this));
         // testbench
         this.app.get("/testbench", this.testBenchView.bind(this));
@@ -50,27 +51,42 @@ export class Routes {
     }
 
     restaurantsView(req: express.Request, res: express.Response, next: express.NextFunction = null) {
-        res.send(`ESKETIT/restaurants`);
+        res.redirect(`/testbench`);
     }
 
     restaurantView(req: express.Request, res: express.Response, next: express.NextFunction = null) {
-        res.send(`ESKETIT/restaurants/${req.params.id}`);
+        res.redirect(`/testbench`);
     }
 
     reviewsView(req: express.Request, res: express.Response, next: express.NextFunction = null) {
-        res.send(`ESKETIT/reviews`);
+        res.redirect(`/testbench`);
     }
 
     reviewView(req: express.Request, res: express.Response, next: express.NextFunction = null) {
-        res.send(`ESKETIT/reviews/${req.params.id}`);
+        res.redirect(`/testbench`);
     }
 
     loginView(req: express.Request, res: express.Response, next: express.NextFunction = null) {
-        res.send(`ESKETIT/login`);
+        res.redirect(`/testbench`);
+    }
+
+    logoutView(req: express.Request, res: express.Response, next: express.NextFunction = null) {
+        new DatabaseMethods.Session(this.main.database)
+            .remove({
+                sessionPK: req.cookies.timeSession
+            })
+            .then(() => {
+                res.clearCookie("timeSession");
+                res.redirect(`/testbench`);
+            })
+            .catch(e => {
+                res.redirect(`/testbench`);
+                console.error(e);
+            });
     }
 
     signupView(req: express.Request, res: express.Response, next: express.NextFunction = null) {
-        res.send(`ESKETIT/signup`);
+        res.redirect(`/testbench`);
     }
 
     // testbench
@@ -86,14 +102,14 @@ export class Routes {
             .then(sessionDoc => new DatabaseMethods.User(this.main.database).findOne({
                 userPK: sessionDoc.userFK
             }))
-            .then(userDoc => comp.userDoc = userDoc)
+            .then(userDoc => comp.userDoc = userDoc.document)
             .then(() => new DatabaseMethods.Restaurant(this.main.database).find())
-            .then(restaurantDocs => comp.restaurantDocs = restaurantDocs)
+            .then(restaurantDocs => comp.restaurantDocs = restaurantDocs.map(d => d.document))
             .then(() => new DatabaseMethods.Post(this.main.database).find())
-            .then(postDocs => comp.postDocs = postDocs)
+            .then(postDocs => comp.postDocs = postDocs.map(d => d.document))
             .then(() => {
                 // console.log("got docs", Object.keys(comp));
-                console.log("got docs", (comp.userDoc));
+                // console.log("got docs", (comp.userDoc));
                 res.render("testbench-home", {
                     user: comp.userDoc,
                     restaurants: comp.restaurantDocs,
@@ -105,15 +121,14 @@ export class Routes {
         // res.sendFile(join(__dirname, "../views/testbench.html"));
     }
     test(req: express.Request, res: express.Response, next: express.NextFunction = null) {
+        res.redirect(`/testbench`);
         new DatabaseMethods.RestaurantRating(this.main.database)
             .joinAll()
             .then(d => {
                 console.log(d);
-                res.redirect("/testbench");
             })
             .catch(e => {
                 console.error(e);
-                res.redirect("/testbench");
             });
     }
 }
