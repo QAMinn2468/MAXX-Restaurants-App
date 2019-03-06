@@ -24,7 +24,7 @@ export class Posts {
         rest.restaurantFK = data.restaurantFK;
 
         return new Promise<DatabaseMethods.Post>((resolve, reject) => {
-            rest.create().save((err, doc) => {
+            rest.create().save((err: any, doc: any) => {
                 if (err) return reject(err);
 
                 // add rating in one go
@@ -58,7 +58,7 @@ export class Posts {
         rest.postFK = data.postFK;
 
         return new Promise<DatabaseMethods.Post>((resolve, reject) => {
-            rest.create().save((err, doc) => {
+            rest.create().save((err: any, doc: any) => {
                 if (err) return reject(err);
 
                 resolve(rest);

@@ -40,11 +40,11 @@ export class Sessions {
                     });
                 } else {
                     session.create().save()
-                        .then(savedDoc => {
+                        .then((savedDoc: any) => {
                             console.log("session doc created", savedDoc);
                             resolve(session);
                         })
-                        .catch(e => {
+                        .catch((e: any) => {
                             console.error(e);
                             reject(e);
                         });

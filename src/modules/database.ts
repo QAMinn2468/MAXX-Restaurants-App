@@ -115,8 +115,28 @@ export namespace DatabaseMethods {
         get hasDoc(): boolean { return !!this.document; }
         findOne(options: Record<string, any> = null): Promise<T> { return null; }
         find(options: Record<string, any> = null): Promise<T[]> { return null; }
-        remove(options: Record<string, any>): Promise<T> { return null; }
-        create(): Document { return null; }
+        remove(options: TORecord<T>) {
+            return new Promise<T>((resolve, reject) => {
+                this.model.deleteOne(options, (err: any) => {
+                    if (err) return reject(err);
+
+                    resolve();
+                });
+            });
+        }
+        create() {
+            const obj: ORecord<T, ValueOf<T>> = {};
+
+            this.keyList.map(key => {
+                (<any>obj)[key] = this[key];
+            });
+
+            const doc = new this.model(obj);
+
+            this.document = doc;
+
+            return doc;
+        }
         updateDoc(): void { this.assignDataClassToDoc(); }
         addDoc(doc: Document): void { this.assignDataDocToClass(doc); }
         finishPipeline(config: joinConfig[], options: TORecord<T>, resolve: (value?: any | PromiseLike<any>) => void, reject: any) {
@@ -244,12 +264,16 @@ export namespace DatabaseMethods {
         }
 
         create() {
-            const doc = new this.model({
-                userPK: this.userPK,
-                displayName: this.username,
-                username: this.username.toLowerCase(),
-                password: this.password,
+            const obj: ORecord<User, ValueOf<User>> = {
+            };
+
+            this.keyList.map(key => {
+                obj[key] = this[key];
             });
+
+            obj.username = this.username.toLowerCase();
+
+            const doc = new this.model(obj);
 
             this.document = doc;
 
@@ -306,28 +330,6 @@ export namespace DatabaseMethods {
                     });
 
                     resolve(this.selfFacilitated);
-                });
-            });
-        }
-
-        create() {
-            const doc = new this.model({
-                sessionPK: this.sessionPK,
-                expirationDate: this.expirationDate,
-                userFK: this.userFK,
-            });
-
-            this.document = doc;
-
-            return doc;
-        }
-
-        remove(options: TORecord<Session>) {
-            return new Promise<Session>((resolve, reject) => {
-                this.model.deleteOne(options, (err) => {
-                    if (err) return reject(err);
-
-                    resolve();
                 });
             });
         }
@@ -438,24 +440,6 @@ export namespace DatabaseMethods {
             });
         }
 
-        create() {
-            const doc = new this.model({
-                postPK: this.postPK,
-                postFK: this.postFK,
-                title: this.title,
-                content: this.content,
-                userFK: this.userFK,
-                postType: this.postType,
-                restaurantFK: this.restaurantFK,
-                upvoteFKs: this.upvoteFKs,
-                downvoteFKs: this.downvoteFKs,
-            });
-
-            this.document = doc;
-
-            return doc;
-        }
-
         joinAll(options?: TORecord<Post>) {
             return new Promise<any[]>((resolve, reject) => {
                 const config: joinConfig[] = [
@@ -547,24 +531,6 @@ export namespace DatabaseMethods {
                 });
             });
         }
-
-        create() {
-            const doc = new this.model({
-                restaurantPK: this.restaurantPK,
-                name: this.name,
-                description: this.description,
-                street: this.street,
-                apt: this.apt,
-                city: this.city,
-                state: this.state,
-                country: this.country,
-                zip: this.zip,
-            });
-
-            this.document = doc;
-
-            return doc;
-        }
     }
 
     export class RestaurantRating extends Facilitator<RestaurantRating> {
@@ -625,19 +591,6 @@ export namespace DatabaseMethods {
                     resolve(this.selfFacilitated);
                 });
             });
-        }
-
-        create() {
-            const doc = new this.model({
-                restaurantRatingPK: this.restaurantRatingPK,
-                restaurantFK: this.restaurantFK,
-                postFK: this.postFK,
-                rating: this.rating,
-            });
-
-            this.document = doc;
-
-            return doc;
         }
 
         joinAll(options?: TORecord<RestaurantRating>) {

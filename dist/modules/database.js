@@ -102,8 +102,26 @@ var DatabaseMethods;
             if (options === void 0) { options = null; }
             return null;
         };
-        Facilitator.prototype.remove = function (options) { return null; };
-        Facilitator.prototype.create = function () { return null; };
+        Facilitator.prototype.remove = function (options) {
+            var _this = this;
+            return new Promise(function (resolve, reject) {
+                _this.model.deleteOne(options, function (err) {
+                    if (err)
+                        return reject(err);
+                    resolve();
+                });
+            });
+        };
+        Facilitator.prototype.create = function () {
+            var _this = this;
+            var obj = {};
+            this.keyList.map(function (key) {
+                obj[key] = _this[key];
+            });
+            var doc = new this.model(obj);
+            this.document = doc;
+            return doc;
+        };
         Facilitator.prototype.updateDoc = function () { this.assignDataClassToDoc(); };
         Facilitator.prototype.addDoc = function (doc) { this.assignDataDocToClass(doc); };
         Facilitator.prototype.finishPipeline = function (config, options, resolve, reject) {
@@ -218,12 +236,13 @@ var DatabaseMethods;
             });
         };
         User.prototype.create = function () {
-            var doc = new this.model({
-                userPK: this.userPK,
-                displayName: this.username,
-                username: this.username.toLowerCase(),
-                password: this.password,
+            var _this = this;
+            var obj = {};
+            this.keyList.map(function (key) {
+                obj[key] = _this[key];
             });
+            obj.username = this.username.toLowerCase();
+            var doc = new this.model(obj);
             this.document = doc;
             return doc;
         };
@@ -269,25 +288,6 @@ var DatabaseMethods;
                         _this.selfFacilitated.push(new Session(_this.db, doc));
                     });
                     resolve(_this.selfFacilitated);
-                });
-            });
-        };
-        Session.prototype.create = function () {
-            var doc = new this.model({
-                sessionPK: this.sessionPK,
-                expirationDate: this.expirationDate,
-                userFK: this.userFK,
-            });
-            this.document = doc;
-            return doc;
-        };
-        Session.prototype.remove = function (options) {
-            var _this = this;
-            return new Promise(function (resolve, reject) {
-                _this.model.deleteOne(options, function (err) {
-                    if (err)
-                        return reject(err);
-                    resolve();
                 });
             });
         };
@@ -357,21 +357,6 @@ var DatabaseMethods;
                     resolve(_this.selfFacilitated);
                 });
             });
-        };
-        Post.prototype.create = function () {
-            var doc = new this.model({
-                postPK: this.postPK,
-                postFK: this.postFK,
-                title: this.title,
-                content: this.content,
-                userFK: this.userFK,
-                postType: this.postType,
-                restaurantFK: this.restaurantFK,
-                upvoteFKs: this.upvoteFKs,
-                downvoteFKs: this.downvoteFKs,
-            });
-            this.document = doc;
-            return doc;
         };
         Post.prototype.joinAll = function (options) {
             var _this = this;
@@ -449,21 +434,6 @@ var DatabaseMethods;
                 });
             });
         };
-        Restaurant.prototype.create = function () {
-            var doc = new this.model({
-                restaurantPK: this.restaurantPK,
-                name: this.name,
-                description: this.description,
-                street: this.street,
-                apt: this.apt,
-                city: this.city,
-                state: this.state,
-                country: this.country,
-                zip: this.zip,
-            });
-            this.document = doc;
-            return doc;
-        };
         return Restaurant;
     }(Facilitator));
     DatabaseMethods.Restaurant = Restaurant;
@@ -509,16 +479,6 @@ var DatabaseMethods;
                     resolve(_this.selfFacilitated);
                 });
             });
-        };
-        RestaurantRating.prototype.create = function () {
-            var doc = new this.model({
-                restaurantRatingPK: this.restaurantRatingPK,
-                restaurantFK: this.restaurantFK,
-                postFK: this.postFK,
-                rating: this.rating,
-            });
-            this.document = doc;
-            return doc;
         };
         RestaurantRating.prototype.joinAll = function (options) {
             var _this = this;

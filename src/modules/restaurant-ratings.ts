@@ -19,7 +19,7 @@ export class RestaurantRatings {
         rest.rating = data.rating || 1;
 
         return new Promise<DatabaseMethods.RestaurantRating>((resolve, reject) => {
-            rest.create().save((err, doc) => {
+            rest.create().save((err: any, doc: any) => {
                 if (err) return reject(err);
 
                 resolve(rest);
