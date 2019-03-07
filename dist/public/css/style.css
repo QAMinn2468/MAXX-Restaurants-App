@@ -58,10 +58,10 @@ div {
 .phoneNumber:hover {
   font-size: 2em;
   font-weight: bolder;
+  transition-property: font-size 2s, font-weight 2s;
 }
 
 /*------------------------------------------------------------------------------
-
                              Add a restaurant Page
 --------------------------------------------------------------------------------*/
 form {
