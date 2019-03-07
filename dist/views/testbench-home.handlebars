@@ -1,0 +1,77 @@
+{{#if user}}
+    <div>
+        <a href="/logout"><button>Logout</button></a>
+    </div>
+{{else}}
+    <div>
+        <h2>Sign Up</h2>
+        <form action="/api/signup" method="post">
+            <input type="text" name="username" value="username">
+            <input type="password" name="password" value="password">
+            <input type="password" name="password-confirm" value="password">
+            <button>Submit</button>
+        </form>
+    </div>
+    <div>
+        <h2>Login</h2>
+        <form action="/api/login" method="post">
+            <input type="text" name="username" value="username">
+            <input type="password" name="password" value="password">
+            <button>Submit</button>
+        </form>
+    </div>
+{{/if}}
+{{#if user}}
+    <div>
+        <h2>Add Restaurant</h2>
+        <form action="/api/add-restaurant" method="post">
+            <input type="text" name="name" value="name">
+            <input type="text" name="description" value="description">
+            <input type="text" name="street" value="801 Boush st.">
+            <input type="text" name="apt" value="204">
+            <input type="text" name="city" value="Norfolk">
+            <input type="text" name="state" value="VA">
+            <select name="country" id="">
+                <option value="usa">United States</option>
+            </select>
+            <input type="text" name="zip" value="12345">
+            <button>Submit</button>
+        </form>
+    </div>
+    {{#each restaurants}}
+        <div>
+            <h2>Add Review (Restaurant: {{name}})</h2>
+            <form action="/api/add-review" method="post">
+                <input type="text" name="title" value="Review Title">
+                <input type="text" name="content" value="This is a review">
+                <input type="text" name="userFK" value="{{../user.userPK}}" hidden>
+                <input type="text" name="restaurantFK" value="{{restaurantPK}}" hidden>
+                <select name="rating" id="">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+                <button>Submit</button>
+            </form>
+        </div>
+    {{/each}}
+    {{#each posts}}
+        <div>
+            {{#if title}}
+            <h2>Add Comment (Post: "{{title}}")</h2>
+            <h6>Replying to: "{{content}}"</h6>
+            {{else}}
+            <h2>Add Comment (Post: (comment))</h2>
+            <h6>Replying to: "{{content}}"</h6>
+            {{/if}}
+            <form action="/api/add-comment" method="post">
+                <input type="text" name="content" value="This is a comment">
+                <input type="text" name="postFK" value="{{postPK}}" hidden>
+                <input type="text" name="userFK" value="{{../user.userPK}}" hidden>
+                <button>Submit</button>
+            </form>
+        </div>
+    {{/each}}
+{{/if}}

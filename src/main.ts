@@ -1,6 +1,7 @@
 import * as express from "express";
 import * as bodyParser from "body-parser";
 import * as cookieParser from "cookie-parser";
+import * as handlebars from "express-handlebars";
 import { Routes } from "./modules/routes";
 import { API } from "./modules/api";
 import { DatabaseMethods } from "./modules/database";
@@ -38,8 +39,12 @@ export class Results {
 
     constructor(success: boolean, content: any, message: string) {
         this.success = success;
-        this.content = content;
+        this.content = this.stripCircular(content);
         this.message = message;
+    }
+
+    stripCircular(content: any) {
+        return Object.assign(content, { db: null });
     }
 }
 
@@ -73,6 +78,14 @@ export class Main {
             this.app.use(bodyParser.urlencoded({ extended: true }));
             this.app.use(bodyParser.json());
             this.app.use(cookieParser());
+
+            const engine = handlebars.create({
+                defaultLayout: "testbench",
+                layoutsDir: join(__dirname, "views/layouts")
+            });
+            this.app.engine("handlebars", engine.engine);
+            this.app.set("view engine", "handlebars");
+
 
             this.app.use(express.static(join(__dirname, "public")));
             this.app.use(this.routesModule.routes);

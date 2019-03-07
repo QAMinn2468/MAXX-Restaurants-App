@@ -5,6 +5,7 @@
   "main": "build.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "install-build-deps": "npm install -g browserify watchify sass typescript uglify-js",
     "build": "browserify dist/public/js/index.js | uglifyjs -c -m > dist/public/js/bundle.prod.js"
   },
   "author": "",
@@ -13,20 +14,23 @@
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "cookie-parser": "^1.4.4",
+    "csurf": "^1.9.0",
     "express": "^4.16.4",
+    "express-handlebars": "^3.0.2",
     "helmet": "^3.15.1",
     "mongodb": "^3.1.13",
     "mongoose": "^5.4.15",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
-    "uuid": "^3.3.2",
-    "vue": "^2.6.7"
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
     "@types/body-parser": "^1.17.0",
     "@types/cookie-parser": "^1.4.1",
+    "@types/csurf": "^1.9.35",
     "@types/express": "^4.16.1",
+    "@types/express-handlebars": "0.0.30",
     "@types/mongodb": "^3.1.19",
     "@types/mongoose": "^5.3.19",
     "@types/passport": "^1.0.0",

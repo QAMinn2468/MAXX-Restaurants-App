@@ -24,7 +24,7 @@ export class Restaurants {
         rest.zip = data.zip || "";
 
         return new Promise<DatabaseMethods.Restaurant>((resolve, reject) => {
-            rest.create().save((err, doc) => {
+            rest.create().save((err: any, doc: any) => {
                 if (err) return reject(err);
 
                 resolve(rest);

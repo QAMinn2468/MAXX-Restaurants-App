@@ -11,21 +11,29 @@ export class Accounts {
         this.main = main;
     }
 
-    createAccount({username, password}: {username: string, password: string}): Promise<DatabaseMethods.User> {
-        console.log("creating account", username, password);
+    createAccount({username, displayName, password}: {username: string, displayName: string, password: string}): Promise<DatabaseMethods.User> {
+        // display name may or may not be prompted for at the beginning... or ever
+        displayName = displayName || username;
+        console.log("creating account", username, displayName, password);
 
         return new Promise<DatabaseMethods.User>((resolve, reject) => {
             const user = new DatabaseMethods.User(this.main.database);
             user.userPK = uuid();
             if (this.validateUsername(username)) {
-                user.username = username;
+                user.username = username.toLowerCase();
+            } else {
+                return reject("Invalid username");
+            }
+
+            if (this.validateUsername(displayName)) {
+                user.displayName = displayName;
             } else {
                 return reject("Invalid username");
             }
 
             new Promise((resolve, reject) => {
                 user
-                .find({
+                .findOne({
                     username: username.toLowerCase(),
                 })
                 .then(doc => {
@@ -66,7 +74,7 @@ export class Accounts {
         const user = new DatabaseMethods.User(this.main.database);
 
         return new Promise<DatabaseMethods.User>((resolve, reject) => {
-            user.find({
+            user.findOne({
                 username
             })
             .then(doc => {

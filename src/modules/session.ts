@@ -1,7 +1,6 @@
 import * as uuid from "uuid/v1";
 import { Main } from "../main";
 import { DatabaseMethods } from "./database";
-import { Document } from "mongoose";
 
 export class Sessions {
     main: Main;
@@ -10,14 +9,14 @@ export class Sessions {
         this.main = main;
     }
 
-    newSession(userFK: string) {
+    createSession(userFK: string) {
         console.log("adding session");
 
         const session = new DatabaseMethods.Session(this.main.database);
         session.userFK = userFK;
 
         return new Promise<DatabaseMethods.Session>((resolve, reject) => {
-            session.find({
+            session.findOne({
                 userFK
             }).then(session => {
                 const sessionPK = uuid();
@@ -41,11 +40,11 @@ export class Sessions {
                     });
                 } else {
                     session.create().save()
-                        .then(savedDoc => {
+                        .then((savedDoc: any) => {
                             console.log("session doc created", savedDoc);
                             resolve(session);
                         })
-                        .catch(e => {
+                        .catch((e: any) => {
                             console.error(e);
                             reject(e);
                         });

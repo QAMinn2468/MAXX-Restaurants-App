@@ -42,17 +42,18 @@ var DatabaseMethods;
             this.sessionModel = this.connection.model("sessions", new mongoose_1.Schema({
                 sessionPK: { type: String, required: true },
                 expirationDate: { type: Date, required: true },
-                userFK: { type: String, required: true },
+                userFK: { type: String, required: true, ref: "users" },
             }, {
                 timestamps: true
             }));
             this.postModel = this.connection.model("posts", new mongoose_1.Schema({
                 postPK: { type: String, required: true },
+                postFK: { type: String, default: "" },
                 title: { type: String, default: "" },
                 content: { type: String, required: true },
                 userFK: { type: String, required: true },
                 postType: { type: Number, required: true },
-                restaurantFK: { type: String, required: true },
+                restaurantFK: { type: String, default: "" },
                 upvoteFKs: { type: [String], default: [] },
                 downvoteFKs: { type: [String], default: [] },
             }, {
@@ -71,7 +72,6 @@ var DatabaseMethods;
             }, {
                 timestamps: true
             }));
-            //--
             this.restaurantRatingModel = this.connection.model("ratings", new mongoose_1.Schema({
                 restaurantRatingPK: { type: String, required: true },
                 postFK: { type: String, required: true },
@@ -86,16 +86,93 @@ var DatabaseMethods;
     var Facilitator = /** @class */ (function () {
         function Facilitator(db) {
             this.document = null;
+            this.selfFacilitated = [];
+            this.db = db;
         }
         Object.defineProperty(Facilitator.prototype, "hasDoc", {
             get: function () { return !!this.document; },
             enumerable: true,
             configurable: true
         });
-        Facilitator.prototype.find = function (options) { return null; };
-        Facilitator.prototype.create = function () { return null; };
+        Facilitator.prototype.findOne = function (options) {
+            if (options === void 0) { options = null; }
+            return null;
+        };
+        Facilitator.prototype.find = function (options) {
+            if (options === void 0) { options = null; }
+            return null;
+        };
+        Facilitator.prototype.remove = function (options) {
+            var _this = this;
+            return new Promise(function (resolve, reject) {
+                _this.model.deleteOne(options, function (err) {
+                    if (err)
+                        return reject(err);
+                    resolve();
+                });
+            });
+        };
+        Facilitator.prototype.create = function () {
+            var _this = this;
+            var obj = {};
+            this.keyList.map(function (key) {
+                obj[key] = _this[key];
+            });
+            var doc = new this.model(obj);
+            this.document = doc;
+            return doc;
+        };
         Facilitator.prototype.updateDoc = function () { this.assignDataClassToDoc(); };
         Facilitator.prototype.addDoc = function (doc) { this.assignDataDocToClass(doc); };
+        Facilitator.prototype.finishPipeline = function (config, options, resolve, reject) {
+            var pipeline = [];
+            config.map(function (conf) {
+                pipeline.push({
+                    "$lookup": {
+                        "from": conf.collectionName,
+                        "localField": conf.localField,
+                        "foreignField": conf.foreignField,
+                        "as": conf.localField
+                    }
+                });
+                pipeline.push({
+                    "$unwind": {
+                        "path": "$" + conf.localField,
+                        "preserveNullAndEmptyArrays": true
+                    }
+                });
+            });
+            var x = {
+                $project: {
+                    _id: 0
+                }
+            };
+            this.keyList.map(function (key) {
+                if (key.match(/FK$/i)) {
+                    x.$project[key] = "$" + key;
+                }
+                else {
+                    x.$project[key] = 1;
+                }
+            });
+            pipeline.push(x);
+            if (options) {
+                var matchOptions_1 = {
+                    "$match": {}
+                };
+                this.keyList.map(function (key) {
+                    if (options[key])
+                        matchOptions_1["$match"][key] = options[key];
+                });
+                pipeline.push(matchOptions_1);
+            }
+            this.model
+                .aggregate(pipeline, function (err, d) {
+                if (err)
+                    return reject(err);
+                resolve(d);
+            });
+        };
         Facilitator.prototype.assignDataDocToClass = function (doc) {
             var _this = this;
             if (!doc)
@@ -131,8 +208,9 @@ var DatabaseMethods;
             _this.addDoc(doc);
             return _this;
         }
-        User.prototype.find = function (options) {
+        User.prototype.findOne = function (options) {
             var _this = this;
+            if (options === void 0) { options = null; }
             return new Promise(function (resolve, reject) {
                 _this.model.findOne(options, function (err, doc) {
                     if (err)
@@ -143,13 +221,28 @@ var DatabaseMethods;
                 });
             });
         };
-        User.prototype.create = function () {
-            var doc = new this.model({
-                userPK: this.userPK,
-                displayName: this.username,
-                username: this.username.toLowerCase(),
-                password: this.password,
+        User.prototype.find = function (options) {
+            var _this = this;
+            if (options === void 0) { options = null; }
+            return new Promise(function (resolve, reject) {
+                _this.model.find(options, function (err, docs) {
+                    if (err)
+                        return reject(err);
+                    docs.map(function (doc) {
+                        _this.selfFacilitated.push(new User(_this.db, doc));
+                    });
+                    resolve(_this.selfFacilitated);
+                });
             });
+        };
+        User.prototype.create = function () {
+            var _this = this;
+            var obj = {};
+            this.keyList.map(function (key) {
+                obj[key] = _this[key];
+            });
+            obj.username = this.username.toLowerCase();
+            var doc = new this.model(obj);
             this.document = doc;
             return doc;
         };
@@ -171,8 +264,9 @@ var DatabaseMethods;
             _this.addDoc(doc);
             return _this;
         }
-        Session.prototype.find = function (options) {
+        Session.prototype.findOne = function (options) {
             var _this = this;
+            if (options === void 0) { options = null; }
             return new Promise(function (resolve, reject) {
                 _this.model.findOne(options, function (err, doc) {
                     if (err)
@@ -183,14 +277,32 @@ var DatabaseMethods;
                 });
             });
         };
-        Session.prototype.create = function () {
-            var doc = new this.model({
-                sessionPK: this.sessionPK,
-                expirationDate: this.expirationDate,
-                userFK: this.userFK,
+        Session.prototype.find = function (options) {
+            var _this = this;
+            if (options === void 0) { options = null; }
+            return new Promise(function (resolve, reject) {
+                _this.model.find(options, function (err, docs) {
+                    if (err)
+                        return reject(err);
+                    docs.map(function (doc) {
+                        _this.selfFacilitated.push(new Session(_this.db, doc));
+                    });
+                    resolve(_this.selfFacilitated);
+                });
             });
-            this.document = doc;
-            return doc;
+        };
+        Session.prototype.joinAll = function (options) {
+            var _this = this;
+            return new Promise(function (resolve, reject) {
+                var config = [
+                    {
+                        collectionName: _this.db.userModel.collection.name,
+                        localField: "userFK",
+                        foreignField: "userPK"
+                    }
+                ];
+                _this.finishPipeline(config, options, resolve, reject);
+            });
         };
         return Session;
     }(Facilitator));
@@ -202,6 +314,7 @@ var DatabaseMethods;
             var _this = _super.call(this, db) || this;
             _this.keyList = [
                 "postPK",
+                "postFK",
                 "title",
                 "content",
                 "userFK",
@@ -218,8 +331,9 @@ var DatabaseMethods;
             _this.addDoc(doc);
             return _this;
         }
-        Post.prototype.find = function (options) {
+        Post.prototype.findOne = function (options) {
             var _this = this;
+            if (options === void 0) { options = null; }
             return new Promise(function (resolve, reject) {
                 _this.model.findOne(options, function (err, doc) {
                     if (err)
@@ -230,19 +344,42 @@ var DatabaseMethods;
                 });
             });
         };
-        Post.prototype.create = function () {
-            var doc = new this.model({
-                postPK: this.postPK,
-                title: this.title,
-                content: this.content,
-                userFK: this.userFK,
-                postType: this.postType,
-                restaurantFK: this.restaurantFK,
-                upvoteFKs: this.upvoteFKs,
-                downvoteFKs: this.downvoteFKs,
+        Post.prototype.find = function (options) {
+            var _this = this;
+            if (options === void 0) { options = null; }
+            return new Promise(function (resolve, reject) {
+                _this.model.find(options, function (err, docs) {
+                    if (err)
+                        return reject(err);
+                    docs.map(function (doc) {
+                        _this.selfFacilitated.push(new Post(_this.db, doc));
+                    });
+                    resolve(_this.selfFacilitated);
+                });
             });
-            this.document = doc;
-            return doc;
+        };
+        Post.prototype.joinAll = function (options) {
+            var _this = this;
+            return new Promise(function (resolve, reject) {
+                var config = [
+                    {
+                        collectionName: _this.db.postModel.collection.name,
+                        localField: "postFK",
+                        foreignField: "postPK"
+                    },
+                    {
+                        collectionName: _this.db.userModel.collection.name,
+                        localField: "userFK",
+                        foreignField: "userPK"
+                    },
+                    {
+                        collectionName: _this.db.restaurantModel.collection.name,
+                        localField: "restaurantFK",
+                        foreignField: "restaurantPK"
+                    },
+                ];
+                _this.finishPipeline(config, options, resolve, reject);
+            });
         };
         return Post;
     }(Facilitator));
@@ -270,8 +407,9 @@ var DatabaseMethods;
             _this.addDoc(doc);
             return _this;
         }
-        Restaurant.prototype.find = function (options) {
+        Restaurant.prototype.findOne = function (options) {
             var _this = this;
+            if (options === void 0) { options = null; }
             return new Promise(function (resolve, reject) {
                 _this.model.findOne(options, function (err, doc) {
                     if (err)
@@ -282,20 +420,19 @@ var DatabaseMethods;
                 });
             });
         };
-        Restaurant.prototype.create = function () {
-            var doc = new this.model({
-                restaurantPK: this.restaurantPK,
-                name: this.name,
-                description: this.description,
-                street: this.street,
-                apt: this.apt,
-                city: this.city,
-                state: this.state,
-                country: this.country,
-                zip: this.zip,
+        Restaurant.prototype.find = function (options) {
+            var _this = this;
+            if (options === void 0) { options = null; }
+            return new Promise(function (resolve, reject) {
+                _this.model.find(options, function (err, docs) {
+                    if (err)
+                        return reject(err);
+                    docs.map(function (doc) {
+                        _this.selfFacilitated.push(new Restaurant(_this.db, doc));
+                    });
+                    resolve(_this.selfFacilitated);
+                });
             });
-            this.document = doc;
-            return doc;
         };
         return Restaurant;
     }(Facilitator));
@@ -307,6 +444,7 @@ var DatabaseMethods;
             var _this = _super.call(this, db) || this;
             _this.keyList = [
                 "restaurantRatingPK",
+                "restaurantFK",
                 "postFK",
                 "rating",
             ];
@@ -315,8 +453,9 @@ var DatabaseMethods;
             _this.addDoc(doc);
             return _this;
         }
-        RestaurantRating.prototype.find = function (options) {
+        RestaurantRating.prototype.findOne = function (options) {
             var _this = this;
+            if (options === void 0) { options = null; }
             return new Promise(function (resolve, reject) {
                 _this.model.findOne(options, function (err, doc) {
                     if (err)
@@ -327,14 +466,37 @@ var DatabaseMethods;
                 });
             });
         };
-        RestaurantRating.prototype.create = function () {
-            var doc = new this.model({
-                restaurantRatingPK: this.restaurantRatingPK,
-                postFK: this.postFK,
-                rating: this.rating,
+        RestaurantRating.prototype.find = function (options) {
+            var _this = this;
+            if (options === void 0) { options = null; }
+            return new Promise(function (resolve, reject) {
+                _this.model.find(options, function (err, docs) {
+                    if (err)
+                        return reject(err);
+                    docs.map(function (doc) {
+                        _this.selfFacilitated.push(new RestaurantRating(_this.db, doc));
+                    });
+                    resolve(_this.selfFacilitated);
+                });
             });
-            this.document = doc;
-            return doc;
+        };
+        RestaurantRating.prototype.joinAll = function (options) {
+            var _this = this;
+            return new Promise(function (resolve, reject) {
+                var config = [
+                    {
+                        collectionName: _this.db.postModel.collection.name,
+                        localField: "postFK",
+                        foreignField: "postPK"
+                    },
+                    {
+                        collectionName: _this.db.restaurantModel.collection.name,
+                        localField: "restaurantFK",
+                        foreignField: "restaurantPK"
+                    },
+                ];
+                _this.finishPipeline(config, options, resolve, reject);
+            });
         };
         return RestaurantRating;
     }(Facilitator));

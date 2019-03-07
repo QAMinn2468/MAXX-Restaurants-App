@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express = require("express");
 var bodyParser = require("body-parser");
 var cookieParser = require("cookie-parser");
+var handlebars = require("express-handlebars");
 var routes_1 = require("./modules/routes");
 var api_1 = require("./modules/api");
 var database_1 = require("./modules/database");
@@ -10,9 +11,12 @@ var path_1 = require("path");
 var Results = /** @class */ (function () {
     function Results(success, content, message) {
         this.success = success;
-        this.content = content;
+        this.content = this.stripCircular(content);
         this.message = message;
     }
+    Results.prototype.stripCircular = function (content) {
+        return Object.assign(content, { db: null });
+    };
     return Results;
 }());
 exports.Results = Results;
@@ -32,6 +36,12 @@ var Main = /** @class */ (function () {
             _this.app.use(bodyParser.urlencoded({ extended: true }));
             _this.app.use(bodyParser.json());
             _this.app.use(cookieParser());
+            var engine = handlebars.create({
+                defaultLayout: "testbench",
+                layoutsDir: path_1.join(__dirname, "views/layouts")
+            });
+            _this.app.engine("handlebars", engine.engine);
+            _this.app.set("view engine", "handlebars");
             _this.app.use(express.static(path_1.join(__dirname, "public")));
             _this.app.use(_this.routesModule.routes);
             _this.app.use("/api", _this.apiModule.routes);
