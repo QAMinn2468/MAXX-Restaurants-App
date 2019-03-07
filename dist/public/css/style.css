@@ -47,6 +47,11 @@ div {
   border-radius: 1em;
 }
 
+/* .restaurant .menu {
+    position: absolute;                               This is not working correctly, but is closest yet.
+    bottom: 0;
+} */
+
 .restaurant:hover {
   margin: 2;
   width: 350px;
@@ -60,6 +65,8 @@ div {
   font-weight: bolder;
   transition-property: font-size 2s, font-weight 2s;
 }
+
+
 
 /*------------------------------------------------------------------------------
                              Add a restaurant Page
