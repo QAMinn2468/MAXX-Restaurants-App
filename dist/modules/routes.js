@@ -27,8 +27,10 @@ var Routes = /** @class */ (function () {
     Routes.prototype.createRoutes = function () {
         this.app.get("/", this.indexView.bind(this));
         this.app.get("/restaurants", this.restaurantsView.bind(this));
+        this.app.get("/restaurants/add", this.addRestaurantsView.bind(this));
         this.app.get("/restaurants/:id", this.restaurantView.bind(this));
         this.app.get("/reviews", this.reviewsView.bind(this));
+        this.app.get("/reviews/add", this.addReviewsView.bind(this));
         this.app.get("/reviews/:id", this.reviewView.bind(this));
         this.app.get("/login", this.loginView.bind(this));
         this.app.get("/logout", this.logoutView.bind(this));
@@ -45,11 +47,19 @@ var Routes = /** @class */ (function () {
         if (next === void 0) { next = null; }
         res.redirect("/testbench");
     };
+    Routes.prototype.addRestaurantsView = function (req, res, next) {
+        if (next === void 0) { next = null; }
+        res.redirect("/testbench");
+    };
     Routes.prototype.restaurantView = function (req, res, next) {
         if (next === void 0) { next = null; }
         res.redirect("/testbench");
     };
     Routes.prototype.reviewsView = function (req, res, next) {
+        if (next === void 0) { next = null; }
+        res.redirect("/testbench");
+    };
+    Routes.prototype.addReviewsView = function (req, res, next) {
         if (next === void 0) { next = null; }
         res.redirect("/testbench");
     };

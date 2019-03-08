@@ -69,9 +69,11 @@ export class API {
     }
 
     signupAPI(req: express.Request, res: express.Response, next: express.NextFunction = null) {
+        console.log(req.body);
+
         this.accounts.createAccount(req.body)
         .then(user => {
-                if (user.hasDoc) {
+                if (user && user.hasDoc) {
                     // const response = new Results(true, user, null);
                     res.redirect("/testbench");
                 } else {
