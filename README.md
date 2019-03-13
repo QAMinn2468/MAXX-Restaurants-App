@@ -30,3 +30,7 @@ Before you can build you'll need to install global build dependencies.
 Use this command to install these dependencies globally: `npm run-script install-build-deps`
 
 The repo comes with a file called `build.js`. Simply execute `node build.js` at the root of the project to start the build process. This can be kept running in the background as it will watch for most file changes. File extensions include `.ts`, `.scss`, and `.sass`.
+
+### FYI
+
+Icons were sourced from https://icons8.com/.
