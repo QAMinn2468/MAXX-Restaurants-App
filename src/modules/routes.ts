@@ -49,7 +49,7 @@ export class Routes {
     }
 
     indexView(req: express.Request, res: express.Response, next: express.NextFunction = null) {
-        res.sendFile(join(__dirname, "../views/index.html"));
+        res.render("index");
     }
 
     restaurantsView(req: express.Request, res: express.Response, next: express.NextFunction = null) {

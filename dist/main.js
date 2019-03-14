@@ -37,7 +37,7 @@ var Main = /** @class */ (function () {
             _this.app.use(bodyParser.json());
             _this.app.use(cookieParser());
             var engine = handlebars.create({
-                defaultLayout: "testbench",
+                defaultLayout: "layout",
                 layoutsDir: path_1.join(__dirname, "views/layouts")
             });
             _this.app.engine("handlebars", engine.engine);

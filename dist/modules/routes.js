@@ -41,7 +41,7 @@ var Routes = /** @class */ (function () {
     };
     Routes.prototype.indexView = function (req, res, next) {
         if (next === void 0) { next = null; }
-        res.sendFile(path_1.join(__dirname, "../views/index.html"));
+        res.render("index");
     };
     Routes.prototype.restaurantsView = function (req, res, next) {
         if (next === void 0) { next = null; }
