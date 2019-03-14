@@ -21,6 +21,21 @@
         </form>
     </div>
 {{/if}}
+{{#each restaurants}}
+<div>
+    <h2>Restaurant: {{name}}</h2>
+    <p>
+        <span>name: <strong>{{name}}</strong></span><br>
+        <span>description: <strong>{{description}}</strong></span><br>
+        <span>street: <strong>{{street}}</strong></span><br>
+        <span>apt: <strong>{{apt}}</strong></span><br>
+        <span>city: <strong>{{city}}</strong></span><br>
+        <span>state: <strong>{{state}}</strong></span><br>
+        <span>country: <strong>{{country}}</strong></span><br>
+        <span>zip: <strong>{{zip}}</strong></span><br>
+    </p>
+</div>
+{{/each}}
 {{#if user}}
     <div>
         <h2>Add Restaurant</h2>

@@ -5,8 +5,8 @@ createProcess(`node`, ["dist/main.js"]);
 function createProcess(cmd, options) {
     var x = cp.spawn(cmd, options, {
         env: {
-            DB_USERNAME: "MAXX_KIMCCAFFREY",
-            DB_PASSWORD: "kim123",
+            DB_USERNAME: "darryl",
+            DB_PASSWORD: "password",
             DB_PORT: "27017",
             DB_DATABASE: "restaurant",
 

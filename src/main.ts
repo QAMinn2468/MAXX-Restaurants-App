@@ -80,7 +80,7 @@ export class Main {
             this.app.use(cookieParser());
 
             const engine = handlebars.create({
-                defaultLayout: "testbench",
+                defaultLayout: "layout",
                 layoutsDir: join(__dirname, "views/layouts")
             });
             this.app.engine("handlebars", engine.engine);

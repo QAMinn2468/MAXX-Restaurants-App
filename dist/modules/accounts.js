@@ -9,24 +9,30 @@ var Accounts = /** @class */ (function () {
     }
     Accounts.prototype.createAccount = function (_a) {
         var _this = this;
-        var username = _a.username, displayName = _a.displayName, password = _a.password;
+        var username = _a.username, displayName = _a.displayName, password = _a.password, password_confirm = _a["password-confirm"];
         // display name may or may not be prompted for at the beginning... or ever
         displayName = displayName || username;
-        console.log("creating account", username, displayName, password);
+        console.log("creating account", username, displayName, password, password_confirm);
         return new Promise(function (resolve, reject) {
             var user = new database_1.DatabaseMethods.User(_this.main.database);
             user.userPK = uuid();
+            if (password != password_confirm) {
+                console.log("passwords don't match");
+                return resolve(null);
+            }
             if (_this.validateUsername(username)) {
                 user.username = username.toLowerCase();
             }
             else {
-                return reject("Invalid username");
+                console.log("Invalid username");
+                return resolve(null);
             }
             if (_this.validateUsername(displayName)) {
                 user.displayName = displayName;
             }
             else {
-                return reject("Invalid username");
+                console.log("Invalid username");
+                return resolve(null);
             }
             new Promise(function (resolve, reject) {
                 user

@@ -64,9 +64,10 @@ var API = /** @class */ (function () {
     };
     API.prototype.signupAPI = function (req, res, next) {
         if (next === void 0) { next = null; }
+        console.log(req.body);
         this.accounts.createAccount(req.body)
             .then(function (user) {
-            if (user.hasDoc) {
+            if (user && user.hasDoc) {
                 // const response = new Results(true, user, null);
                 res.redirect("/testbench");
             }

@@ -11,24 +11,32 @@ export class Accounts {
         this.main = main;
     }
 
-    createAccount({username, displayName, password}: {username: string, displayName: string, password: string}): Promise<DatabaseMethods.User> {
+    createAccount({username, displayName, password, "password-confirm": password_confirm}: {username: string, displayName: string, password: string, "password-confirm": string}): Promise<DatabaseMethods.User> {
         // display name may or may not be prompted for at the beginning... or ever
         displayName = displayName || username;
-        console.log("creating account", username, displayName, password);
+        console.log("creating account", username, displayName, password, password_confirm);
 
         return new Promise<DatabaseMethods.User>((resolve, reject) => {
             const user = new DatabaseMethods.User(this.main.database);
             user.userPK = uuid();
+
+            if (password != password_confirm) {
+                console.log("passwords don't match");
+                return resolve(null);
+            }
+
             if (this.validateUsername(username)) {
                 user.username = username.toLowerCase();
             } else {
-                return reject("Invalid username");
+                console.log("Invalid username");
+                return resolve(null);
             }
 
             if (this.validateUsername(displayName)) {
                 user.displayName = displayName;
             } else {
-                return reject("Invalid username");
+                console.log("Invalid username");
+                return resolve(null);
             }
 
             new Promise((resolve, reject) => {

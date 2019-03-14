@@ -35,8 +35,10 @@ export class Routes {
     createRoutes() {
         this.app.get("/", this.indexView.bind(this));
         this.app.get("/restaurants", this.restaurantsView.bind(this));
+        this.app.get("/restaurants/add", this.addRestaurantsView.bind(this));
         this.app.get("/restaurants/:id", this.restaurantView.bind(this));
         this.app.get("/reviews", this.reviewsView.bind(this));
+        this.app.get("/reviews/add", this.addReviewsView.bind(this));
         this.app.get("/reviews/:id", this.reviewView.bind(this));
         this.app.get("/login", this.loginView.bind(this));
         this.app.get("/logout", this.logoutView.bind(this));
@@ -47,10 +49,14 @@ export class Routes {
     }
 
     indexView(req: express.Request, res: express.Response, next: express.NextFunction = null) {
-        res.sendFile(join(__dirname, "../views/index.html"));
+        res.render("index");
     }
 
     restaurantsView(req: express.Request, res: express.Response, next: express.NextFunction = null) {
+        res.redirect(`/testbench`);
+    }
+
+    addRestaurantsView(req: express.Request, res: express.Response, next: express.NextFunction = null) {
         res.redirect(`/testbench`);
     }
 
@@ -59,6 +65,10 @@ export class Routes {
     }
 
     reviewsView(req: express.Request, res: express.Response, next: express.NextFunction = null) {
+        res.redirect(`/testbench`);
+    }
+
+    addReviewsView(req: express.Request, res: express.Response, next: express.NextFunction = null) {
         res.redirect(`/testbench`);
     }
 
