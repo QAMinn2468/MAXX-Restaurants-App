@@ -14,7 +14,8 @@ body {
 a {
   display: block;
   padding: 8px;
-  background-color: lightgrey;
+  background-color: gainsboro;
+  border-radius: 1em;
 }
 
 .maxxLogo {
@@ -40,28 +41,34 @@ div {
   margin: 10px;
   min-width: 200px;
   max-width: 30%;
-  margin: 0 auto;
   width: 300px;
   padding: 1em;
-  border: 1px solid #CCC;
+  border: 1px solid crimson;
   border-radius: 1em;
 }
+
+/* .restaurant .menu {
+    position: absolute;                               This is not working correctly, but is closest yet.
+    bottom: 0;
+} */
 
 .restaurant:hover {
   margin: 2;
   width: 350px;
   padding: 2px;
-  border: 2px solid #AAA;
+  border: 2.5px solid crimson;
   border-radius: 1em;
 }
 
 .phoneNumber:hover {
-  font-size: 2em;
+  font-size: 1.5em;
   font-weight: bolder;
+  transition-property: font-size 2s, font-weight 2s;
 }
 
-/*------------------------------------------------------------------------------
 
+
+/*------------------------------------------------------------------------------
                              Add a restaurant Page
 --------------------------------------------------------------------------------*/
 form {
