@@ -53,11 +53,10 @@ div {
 } */
 
 .restaurant:hover {
-  margin: 2;
-  width: 350px;
-  padding: 2px;
+  /* margin: 2; */
+  /* width: 350px; */
+  /* padding: 2px; */
   border: 2.5px solid crimson;
-  border-radius: 1em;
 }
 
 .phoneNumber:hover {
