@@ -57,7 +57,7 @@ export class Routes {
     }
 
     addRestaurantsView(req: express.Request, res: express.Response, next: express.NextFunction = null) {
-        res.redirect(`/testbench`);
+        res.render("add");
     }
 
     restaurantView(req: express.Request, res: express.Response, next: express.NextFunction = null) {

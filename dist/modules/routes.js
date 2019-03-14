@@ -49,7 +49,7 @@ var Routes = /** @class */ (function () {
     };
     Routes.prototype.addRestaurantsView = function (req, res, next) {
         if (next === void 0) { next = null; }
-        res.redirect("/testbench");
+        res.render("add");
     };
     Routes.prototype.restaurantView = function (req, res, next) {
         if (next === void 0) { next = null; }
