@@ -8,10 +8,33 @@ As a result, coworkers will be able to access their dining options more easily. 
 
 ## Prerequisites
 
-Before you get started, you'll need to install NodeJS if you don't have it already. Go to [NodeJS.org](http://nodejs.org) to get the installer. The current project is being developed with v10.15.0. Earlier versions are not guaranteed to work.
+Before you get started, you'll need to install a few applications:
+
+### NodeJS
+
+Go to [NodeJS.org](http://nodejs.org) to get the installer. The current project is being developed with v10.15.0. Earlier versions are not guaranteed to work.
 
 I recommend using nvm to manage Node versions. You can get it [here](https://github.com/creationix/nvm). For Windows users they have [external links](https://github.com/creationix/nvm#important-notes) to similar projects as they do not officially support Windows:
 
+### MongoDB Server
+
+Go to [MongoDB.com](http://mongodb.com) to get the installer.
+
+db.createUser(
+    {
+    user: "<username>",
+    pwd: "password",
+    roles: [ { role: "userAdminAnyDatabase", db: "admin" }, "readWriteAnyDatabase" ]
+    }
+)
+
+db.createUser(
+    {
+    user: "<username>",
+    pwd: "password",
+    roles: [ { role: "userAdmin", db: "maxx-restaurants" }, "readWrite" ]
+    }
+)
 ---
 
 ### How to Build
